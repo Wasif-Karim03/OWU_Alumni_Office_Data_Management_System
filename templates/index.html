@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ohio Wesleyan University - Data Visualizer</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
+    <style>
+        :root {
+            --owu-red: #d00000;
+            --owu-dark-red: #a00000;
+            --owu-black: #1a1a1a;
+            --owu-dark-gray: #333333;
+            --owu-light-gray: #f8f9fa;
+            --owu-white: #ffffff;
+            --owu-border: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--owu-white);
+            color: var(--owu-black);
+            line-height: 1.6;
+        }
+
+        .main-container {
+            background: var(--owu-white);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--owu-black);
+            color: var(--owu-white);
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 4px solid var(--owu-red);
+            position: relative;
+        }
+
+        .back-to-landing {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--owu-white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            z-index: 1000;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(26, 26, 26, 0.8);
+        }
+
+        .back-to-landing:hover {
+            color: var(--owu-red);
+            background: rgba(26, 26, 26, 1);
+            transform: translateX(-5px);
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #a41d33;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: #8b1a2a;
+        }
+
+        .university-logo {
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--owu-white);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .upload-section {
+            padding: 4rem 2rem;
+            background: var(--owu-light-gray);
+        }
+
+        .upload-area {
+            border: 3px dashed var(--owu-red);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            background: var(--owu-white);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .upload-area:hover {
+            border-color: var(--owu-dark-red);
+            background: #fff8f8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(208,0,0,0.15);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--owu-dark-red);
+            background: #fff0f0;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--owu-red);
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn-primary {
+            background: var(--owu-red);
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--owu-dark-red);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(208,0,0,0.3);
+        }
+
+        .btn-success {
+            background: var(--owu-black);
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+        }
+
+        .btn-success:hover {
+            background: var(--owu-dark-gray);
+            transform: translateY(-1px);
+        }
+
+        .btn-add-data {
+            background: var(--owu-white);
+            border: 2px solid var(--owu-red);
+            border-radius: 4px;
+            padding: 0.875rem 2rem;
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+            color: var(--owu-red);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            position: relative;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .btn-add-data::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--owu-red);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-add-data:hover {
+            color: var(--owu-white);
+            text-decoration: none;
+            border-color: var(--owu-dark-red);
+        }
+
+        .btn-add-data:hover::after {
+            width: 100%;
+        }
+
+        .btn-add-data i {
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-add-data:hover i {
+            transform: translateX(2px);
+        }
+
+        .analysis-section {
+            padding: 3rem 2rem;
+            background: var(--owu-white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--owu-black);
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: var(--owu-dark-gray);
+            font-style: italic;
+        }
+
+        .data-card {
+            background: var(--owu-white);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--owu-red);
+        }
+
+        .chart-container {
+            background: var(--owu-white);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid var(--owu-border);
+        }
+
+        .chart-title {
+            color: var(--owu-black);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--owu-border);
+            font-size: 1.3rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid var(--owu-border);
+            border-top: 4px solid var(--owu-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fff0f0;
+            color: var(--owu-red);
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--owu-red);
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: #f0fff0;
+            color: #28a745;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #28a745;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--owu-white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--owu-border);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--owu-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--owu-dark-gray);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .footer {
+            background: var(--owu-black);
+            color: var(--owu-white);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer .university-name {
+            font-weight: 600;
+            color: var(--owu-red);
+        }
+
+        .table {
+            font-size: 0.9rem;
+        }
+
+        .table thead th {
+            background: var(--owu-light-gray);
+            border-bottom: 2px solid var(--owu-red);
+            color: var(--owu-black);
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .upload-area {
+                padding: 2rem 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Ohio Wesleyan specific styling */
+        .owu-accent {
+            color: var(--owu-red);
+        }
+
+        .owu-border-top {
+            border-top: 3px solid var(--owu-red);
+        }
+
+        .owu-section-divider {
+            height: 1px;
+            background: var(--owu-border);
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <a href="/" class="back-to-landing">
+                <i class="fas fa-home"></i> Back to Landing
+            </a>
+            <div class="university-logo">OHIO WESLEYAN UNIVERSITY</div>
+            <h1><i class="fas fa-chart-line"></i> Data Visualizer</h1>
+            <p>Transform your Excel and CSV data into professional insights</p>
+            <a href="/logout" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Upload Your Data File</h3>
+                        <p class="text-muted">Drag and drop your .xlsx, .xls, or .csv file here, or click to browse</p>
+                        <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls,.csv">
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-folder-open"></i> Choose File
+                        </button>
+                        <div class="mt-4">
+                            <a href="/data-management" class="btn-add-data">
+                                <i class="fas fa-plus"></i> Add Data
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="loading" id="loadingSection">
+            <div class="spinner mx-auto"></div>
+            <h4 class="mt-3">Processing your data...</h4>
+            <p class="text-muted">This may take a few moments</p>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="analysis-section" id="analysisSection" style="display: none;">
+            <div class="section-title">
+                <h2><i class="fas fa-analytics"></i> Data Analysis Results</h2>
+                <p>Comprehensive insights from your Excel data</p>
+            </div>
+
+            <!-- Data Overview -->
+            <div class="data-card">
+                <h4 class="chart-title">
+                    <i class="fas fa-info-circle"></i> Data Overview
+                </h4>
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Stats will be populated here -->
+                </div>
+            </div>
+
+            <!-- Sample Data Preview -->
+            <div class="data-card">
+                <h4 class="chart-title">
+                    <i class="fas fa-table"></i> Sample Data Preview
+                </h4>
+                <div class="table-responsive">
+                    <table class="table table-striped" id="sampleDataTable">
+                        <!-- Sample data will be populated here -->
+                    </table>
+                </div>
+            </div>
+
+            <!-- Charts Container -->
+            <div id="chartsContainer">
+                <!-- Charts will be populated here -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><span class="university-name">Ohio Wesleyan University</span></p>
+            <p>Data Visualizer - Professional Data Analysis Tool</p>
+            <p>&copy; 2025 Ohio Wesleyan University. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Global variables
+        let currentAnalysis = null;
+        let currentCharts = null;
+
+        // DOM elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const loadingSection = document.getElementById('loadingSection');
+        const analysisSection = document.getElementById('analysisSection');
+        const statsGrid = document.getElementById('statsGrid');
+        const sampleDataTable = document.getElementById('sampleDataTable');
+        const chartsContainer = document.getElementById('chartsContainer');
+
+        // Event listeners
+        fileInput.addEventListener('change', handleFileSelect);
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('dragleave', handleDragLeave);
+        uploadArea.addEventListener('drop', handleDrop);
+        uploadArea.addEventListener('click', (e) => {
+            // Don't trigger file input if clicking on the Add Data button
+            if (e.target.closest('.btn-add-data')) {
+                return;
+            }
+            fileInput.click();
+        });
+
+        // Ensure back button works properly
+        const backToLandingButton = document.querySelector('.back-to-landing');
+        if (backToLandingButton) {
+            backToLandingButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Back to landing button clicked, navigating to landing page...');
+                window.location.href = '/';
+            });
+        }
+
+        // Ensure Add Data button works properly
+        const addDataButton = document.querySelector('.btn-add-data');
+        if (addDataButton) {
+            addDataButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Add Data button clicked, navigating to data management...');
+                window.location.href = '/data-management';
+            });
+        }
+
+        // File handling functions
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                processFile(file);
+            }
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            uploadArea.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            uploadArea.classList.remove('dragover');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        }
+
+        function processFile(file) {
+            // Validate file type
+            if (!file.name.match(/\.(xlsx|xls|csv)$/i)) {
+                showError('Please select a valid data file (.xlsx, .xls, or .csv)');
+                return;
+            }
+
+            // Show loading
+            showLoading(true);
+            hideError();
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Upload file
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentAnalysis = data.analysis;
+                    currentCharts = data.charts;
+                    displayResults(data.analysis, data.charts);
+                    showSuccess(data.message);
+                } else {
+                    showError(data.error);
+                }
+            })
+            .catch(error => {
+                showError('Error processing file: ' + error.message);
+            })
+            .finally(() => {
+                showLoading(false);
+            });
+        }
+
+
+
+        function displayResults(analysis, charts) {
+            // Display data overview
+            displayDataOverview(analysis);
+            
+            // Display sample data table
+            displaySampleDataTable(analysis);
+            
+            // Display charts
+            displayCharts(charts);
+            
+            // Show analysis section
+            analysisSection.style.display = 'block';
+            
+            // Scroll to results
+            analysisSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function displayDataOverview(analysis) {
+            const stats = [
+                { label: 'Total Rows', value: analysis.shape[0] },
+                { label: 'Total Columns', value: analysis.shape[1] },
+                { label: 'Numeric Columns', value: analysis.numeric_columns.length },
+                { label: 'Categorical Columns', value: analysis.categorical_columns.length },
+                { label: 'Data Type', value: analysis.is_financial ? 'Financial' : 'General' }
+            ];
+
+            statsGrid.innerHTML = stats.map(stat => `
+                <div class="stat-card">
+                    <div class="stat-number">${stat.value}</div>
+                    <div class="stat-label">${stat.label}</div>
+                </div>
+            `).join('');
+        }
+
+        function displaySampleDataTable(analysis) {
+            if (analysis.sample_data && analysis.sample_data.length > 0) {
+                const headers = Object.keys(analysis.sample_data[0]);
+                const tableHTML = `
+                    <thead>
+                        <tr>
+                            ${headers.map(header => `<th>${header}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${analysis.sample_data.map(row => `
+                            <tr>
+                                ${headers.map(header => `<td>${row[header] || ''}</td>`).join('')}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                sampleDataTable.innerHTML = tableHTML;
+            }
+        }
+
+        function displayCharts(charts) {
+            chartsContainer.innerHTML = '';
+            
+            Object.entries(charts).forEach(([chartName, chartData]) => {
+                if (chartName === 'error') return;
+                
+                const chartDiv = document.createElement('div');
+                chartDiv.className = 'chart-container';
+                chartDiv.innerHTML = `
+                    <h4 class="chart-title">
+                        <i class="fas fa-chart-bar"></i> ${formatChartTitle(chartName)}
+                    </h4>
+                    <div id="chart-${chartName}"></div>
+                `;
+                chartsContainer.appendChild(chartDiv);
+                
+                // Render chart
+                try {
+                    const chartConfig = JSON.parse(chartData);
+                    Plotly.newPlot(`chart-${chartName}`, chartConfig.data, chartConfig.layout, {
+                        responsive: true,
+                        displayModeBar: true,
+                        modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d']
+                    });
+                } catch (error) {
+                    console.error('Error rendering chart:', error);
+                }
+            });
+        }
+
+        function formatChartTitle(chartName) {
+            return chartName
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase())
+                .replace('Distribution', 'Distribution Chart')
+                .replace('Categorical', 'Categorical Analysis')
+                .replace('Income Vs Expenses', 'Income vs Expenses')
+                .replace('Scatter Matrix', 'Scatter Plot Matrix');
+        }
+
+        // Utility functions
+        function showLoading(show) {
+            loadingSection.style.display = show ? 'block' : 'none';
+            uploadArea.style.display = show ? 'none' : 'block';
+        }
+
+        function showError(message) {
+            hideError();
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            uploadArea.parentNode.insertBefore(errorDiv, uploadArea.nextSibling);
+        }
+
+        function showSuccess(message) {
+            hideSuccess();
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            uploadArea.parentNode.insertBefore(successDiv, uploadArea.nextSibling);
+        }
+
+        function hideError() {
+            const errorDiv = document.querySelector('.error-message');
+            if (errorDiv) errorDiv.remove();
+        }
+
+        function hideSuccess() {
+            const successDiv = document.querySelector('.success-message');
+            if (successDiv) successDiv.remove();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Ohio Wesleyan University Data Visualizer loaded successfully!');
+        });
+    </script>
+</body>
+</html>

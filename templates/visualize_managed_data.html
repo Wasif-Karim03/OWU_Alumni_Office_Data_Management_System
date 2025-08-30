@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ohio Wesleyan University - Data Visualization</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
+    <style>
+        :root {
+            --owu-red: #c41e3a;
+            --owu-dark-red: #8b1538;
+            --owu-light-red: #e8a4a4;
+            --owu-black: #1a1a1a;
+            --owu-dark-gray: #2c2c2c;
+            --owu-medium-gray: #4a4a4a;
+            --owu-light-gray: #f5f5f5;
+            --owu-white: #ffffff;
+            --owu-border: #d1d5db;
+            --owu-accent-blue: #1e40af;
+            --owu-accent-green: #059669;
+            --owu-accent-amber: #d97706;
+            --owu-gradient: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%);
+            --owu-shadow: 0 10px 25px rgba(196, 30, 58, 0.1);
+            --owu-shadow-hover: 0 20px 40px rgba(196, 30, 58, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--owu-dark-gray);
+            line-height: 1.6;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .main-container {
+            background: var(--owu-white);
+            box-shadow: var(--owu-shadow);
+            margin: 0;
+            overflow: hidden;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .header {
+            background: var(--owu-gradient);
+            color: var(--owu-white);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .university-logo {
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
+            opacity: 0.95;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            color: var(--owu-white);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-style: normal;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0;
+        }
+
+        .content-section {
+            padding: 4rem 2rem;
+            background: var(--owu-white);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--owu-white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            z-index: 1000;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(26, 26, 26, 0.8);
+        }
+
+        .back-button:hover {
+            color: var(--owu-red);
+            background: rgba(26, 26, 26, 1);
+            transform: translateX(-5px);
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #a41d33;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: #8b1a2a;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--owu-red);
+        }
+
+        .section-title h2 {
+            color: var(--owu-black);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: var(--owu-dark-gray);
+            font-size: 1.1rem;
+        }
+
+        .data-card {
+            background: var(--owu-white);
+            border: 1px solid var(--owu-border);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--owu-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--owu-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .data-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--owu-shadow-hover);
+        }
+
+        .data-card:hover::before {
+            width: 8px;
+        }
+
+        .chart-title {
+            color: var(--owu-dark-gray);
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            margin-top: 0;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--owu-red);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            line-height: 1.2;
+        }
+
+        .chart-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--owu-gradient);
+            border-radius: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: var(--owu-light-gray);
+            border: 1px solid var(--owu-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--owu-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(208,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--owu-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--owu-dark-gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chart-container {
+            background: var(--owu-white);
+            border: 1px solid var(--owu-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-container h4 {
+            color: var(--owu-black);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--owu-border);
+            line-height: 1.3;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--owu-dark-gray);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--owu-border);
+            border-top: 4px solid var(--owu-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .table {
+            font-size: 0.9rem;
+        }
+
+        .table thead th {
+            background: var(--owu-light-gray);
+            border-bottom: 2px solid var(--owu-red);
+            color: var(--owu-black);
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-primary {
+            background: var(--owu-red);
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--owu-dark-red);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(208,0,0,0.3);
+        }
+
+        .alert {
+            border-radius: 6px;
+            border: none;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid var(--owu-red);
+        }
+
+        .footer {
+            background: var(--owu-black);
+            color: var(--owu-white);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .university-name {
+            color: var(--owu-red);
+            font-weight: 700;
+        }
+
+        /* Enhanced Tab Styling */
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 8px;
+            margin: 0 4px;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #374151;
+            background: transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: rgba(196, 30, 58, 0.1);
+            color: var(--owu-red);
+            transform: translateY(-1px);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--owu-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .nav-tabs .nav-link i {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .nav-tabs .nav-link.active i {
+            color: white;
+        }
+        
+        .tab-content {
+            padding: 2.5rem 0;
+            margin-top: 1rem;
+        }
+        
+        .tab-pane {
+            padding-top: 1.5rem;
+        }
+
+        /* Enhanced Chart Container */
+        .chart-container {
+            background: var(--owu-white);
+            border: 1px solid var(--owu-border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Professional Button Styling */
+        .btn-primary {
+            background: var(--owu-gradient);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--owu-dark-red);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(196, 30, 58, 0.4);
+        }
+
+        /* Enhanced Statistics Cards */
+        .stat-card {
+            background: var(--owu-white);
+            border: 1px solid var(--owu-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--owu-gradient);
+        }
+
+        .stat-card:hover {
+            border-color: var(--owu-red);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(196, 30, 58, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--owu-red);
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stat-label {
+            color: var(--owu-medium-gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <a href="/data-management" class="back-button" onclick="goBackToDataManagement()">
+                <i class="fas fa-arrow-left"></i> Back to Data Management
+            </a>
+            <a href="/logout" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            <div class="university-logo">OHIO WESLEYAN UNIVERSITY</div>
+            <h1><i class="fas fa-chart-bar"></i> Data Visualization</h1>
+            <p id="fileTitle">Loading...</p>
+        </div>
+
+        <!-- Content Section -->
+        <div class="content-section">
+            <!-- Loading Section -->
+            <div id="loadingSection" class="loading">
+                <div class="spinner"></div>
+                <h4>Loading your data...</h4>
+                <p>Preparing beautiful visualizations for your OWU events</p>
+            </div>
+
+            <!-- Analysis Section -->
+            <div id="analysisSection" style="display: none;">
+                <!-- Section Title -->
+                <div class="section-title">
+                    <h2><i class="fas fa-analytics"></i> Financial Analysis Results</h2>
+                    <p>Comprehensive insights from your event data</p>
+                </div>
+
+                <!-- Data Overview -->
+                <div class="data-card">
+                    <h4 class="chart-title">
+                        <i class="fas fa-info-circle"></i> Data Overview
+                    </h4>
+                    <div class="stats-grid" id="statsGrid">
+                        <!-- Stats will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Sample Data Preview -->
+                <div class="data-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="chart-title mb-0">
+                            <i class="fas fa-table"></i> Event Data Preview
+                        </h4>
+                        <button class="btn btn-success" onclick="downloadEventData()">
+                            <i class="fas fa-download"></i> Download Excel
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="dataTable">
+                            <!-- Data will be populated here -->
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Financial Summary Chart -->
+                <div class="data-card">
+                    <h4 class="chart-title">
+                        <i class="fas fa-chart-bar"></i> Financial Summary by Event
+                    </h4>
+                    <p class="text-muted mb-3">Income, Expenses, and Profit/Loss for each event</p>
+                    
+                    <!-- Financial Summary Stats -->
+                    <div class="row mb-5" id="financialSummaryStats" style="margin-top: 1.5rem;">
+                        <!-- Summary stats will be populated here -->
+                    </div>
+                    
+                    <div id="financialChart" style="height: 700px;"></div>
+                </div>
+
+                <!-- Advanced Analytics Section -->
+                <div class="data-card">
+                    <h4 class="chart-title">
+                        <i class="fas fa-analytics"></i> Advanced Financial Analytics
+                    </h4>
+                    <p class="text-muted mb-3">Comprehensive analysis with trends, ratios, and performance metrics</p>
+                    
+                    <!-- Chart Tabs -->
+                    <ul class="nav nav-tabs mb-4" id="analyticsTabs" role="tablist" style="border-bottom: 2px solid #e5e7eb; background: #f8fafc; border-radius: 12px; padding: 8px;">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="trends-tab" data-bs-toggle="tab" data-bs-target="#trends" type="button" role="tab" style="border: none; border-radius: 8px; margin: 0 4px; padding: 12px 20px; font-weight: 600; color: #374151; background: transparent; transition: all 0.3s ease;">
+                                <i class="fas fa-chart-line" style="margin-right: 8px; color: #059669;"></i> Trend Analysis
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="ratios-tab" data-bs-toggle="tab" data-bs-target="#ratios" type="button" role="tab" style="border: none; border-radius: 8px; margin: 0 4px; padding: 12px 20px; font-weight: 600; color: #374151; background: transparent; transition: all 0.3s ease;">
+                                <i class="fas fa-percentage" style="margin-right: 8px; color: #d97706;"></i> Financial Ratios
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="correlation-tab" data-bs-toggle="tab" data-bs-target="#correlation" type="button" role="tab" style="border: none; border-radius: 8px; margin: 0 4px; padding: 12px 20px; font-weight: 600; color: #374151; background: transparent; transition: all 0.3s ease;">
+                                <i class="fas fa-project-diagram" style="margin-right: 8px; color: #dc2626;"></i> Correlation Matrix
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="analyticsTabsContent">
+                        <!-- Trend Analysis -->
+                        <div class="tab-pane fade show active" id="trends" role="tabpanel">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div id="trendChart" style="height: 400px;"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="performanceChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Financial Ratios -->
+                        <div class="tab-pane fade" id="ratios" role="tabpanel">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div id="ratiosChart" style="height: 400px;"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="efficiencyChart" style="height: 400px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Correlation Matrix -->
+                        <div class="tab-pane fade" id="correlation" role="tabpanel">
+                            <div id="correlationChart" style="height: 500px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistical Analysis Section -->
+                <div class="data-card">
+                    <h4 class="chart-title">
+                        <i class="fas fa-calculator"></i> Statistical Analysis & Insights
+                    </h4>
+                    <p class="text-muted mb-3">Advanced statistical metrics and data insights</p>
+                    
+                    <div class="row" style="margin-top: 2rem;">
+                        <div class="col-md-6">
+                            <div id="distributionChart" style="height: 400px;"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="boxPlotChart" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Statistical Summary -->
+                    <div class="row mt-5" id="statisticalSummary" style="margin-top: 3rem !important;">
+                        <!-- Statistical metrics will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Section -->
+            <div id="errorSection" style="display: none;">
+                <div class="alert alert-danger">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Error Loading Data</h4>
+                    <p id="errorMessage">An error occurred while loading your data.</p>
+                    <button class="btn btn-primary" onclick="location.reload()">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><span class="university-name">Ohio Wesleyan University</span></p>
+            <p>Data Visualizer - Professional Data Analysis Tool</p>
+            <p>&copy; 2025 Ohio Wesleyan University. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Global variables
+        let currentFileId = null;
+        let currentAnalysis = null;
+
+        // Ensure back button works properly
+        document.addEventListener('DOMContentLoaded', function() {
+            const backButton = document.querySelector('.back-button');
+            if (backButton) {
+                backButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Back button clicked, navigating to data management...');
+                    window.location.href = '/data-management';
+                });
+            }
+        });
+        let currentCharts = null;
+
+        // DOM elements
+        const loadingSection = document.getElementById('loadingSection');
+        const analysisSection = document.getElementById('analysisSection');
+        const errorSection = document.getElementById('errorSection');
+        const statsGrid = document.getElementById('statsGrid');
+        const dataTable = document.getElementById('dataTable');
+        const chartsContainer = document.getElementById('chartsContainer');
+        const fileTitle = document.getElementById('fileTitle');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Extract file ID from URL
+            const urlParts = window.location.pathname.split('/');
+            currentFileId = urlParts[urlParts.length - 1];
+            
+            if (currentFileId) {
+                loadVisualizationData();
+            } else {
+                showError('No file ID provided');
+            }
+        });
+
+        function loadVisualizationData() {
+            fetch(`/api/files/${currentFileId}/visualize`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentAnalysis = data.analysis;
+                        currentCharts = data.charts;
+                        
+                        // Update page title
+                        fileTitle.textContent = data.file_name;
+                        
+                        // Display data
+                        displayDataOverview(data.analysis);
+                        displayDataTable(data.data);
+                        displayFinancialSummaryStats(data.data);
+                        displayCharts(data.charts);
+                        
+                        // Show analysis section
+                        loadingSection.style.display = 'none';
+                        analysisSection.style.display = 'block';
+                    } else {
+                        showError('Error loading data: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    showError('Error loading data: ' + error.message);
+                });
+        }
+
+        function displayDataOverview(analysis) {
+            const data = analysis.data || [];
+            const stats = [
+                {
+                    number: data.length,
+                    label: 'Total Events',
+                    icon: 'fas fa-calendar-check'
+                },
+                {
+                    number: data.length > 0 ? Object.keys(data[0]).length : 0,
+                    label: 'Data Fields',
+                    icon: 'fas fa-columns'
+                },
+                {
+                    number: data.length > 0 ? Object.keys(data[0]).filter(key => 
+                        key.includes('Income') || key.includes('Expenses') || key.includes('Profit') || key.includes('Underwritten')
+                    ).length : 0,
+                    label: 'Financial Fields',
+                    icon: 'fas fa-calculator'
+                },
+                {
+                    number: 0,
+                    label: 'Missing Values',
+                    icon: 'fas fa-exclamation-triangle'
+                }
+            ];
+
+            statsGrid.innerHTML = stats.map(stat => `
+                <div class="stat-card">
+                    <div class="stat-number">
+                        <i class="${stat.icon}"></i>
+                    </div>
+                    <div class="stat-number">${stat.number}</div>
+                    <div class="stat-label">${stat.label}</div>
+                </div>
+            `).join('');
+        }
+
+        function displayDataTable(data) {
+            if (data.length === 0) {
+                dataTable.innerHTML = '<tr><td colspan="6" class="text-center">No data available</td></tr>';
+                return;
+            }
+
+            // Define the column order we want
+            const columnOrder = [
+                'Event Name',
+                'Date', 
+                'All Incurred Expenses',
+                'Event Income',
+                'Underwritten',
+                'Profit/Loss'
+            ];
+
+            // Create header row
+            const headerRow = columnOrder.map(header => `<th>${header}</th>`).join('');
+            
+            // Create data rows
+            const dataRows = data.map(row => {
+                return `<tr>${columnOrder.map(header => {
+                    let value = row[header];
+                    if (header === 'Profit/Loss') {
+                        const color = value >= 0 ? 'text-success' : 'text-danger';
+                        return `<td class="${color}">$${value.toFixed(2)}</td>`;
+                    } else if (header.includes('Income') || header.includes('Expenses') || header.includes('Underwritten')) {
+                        return `<td>$${value.toFixed(2)}</td>`;
+                    } else {
+                        return `<td>${value}</td>`;
+                    }
+                }).join('')}</tr>`;
+            }).join('');
+
+            dataTable.innerHTML = `
+                <thead><tr>${headerRow}</tr></thead>
+                <tbody>${dataRows}</tbody>
+            `;
+        }
+
+        function displayCharts(charts) {
+            // Create the financial summary chart
+            createFinancialSummaryChart();
+            
+            // Create advanced analytics charts
+            createTrendAnalysisCharts();
+            createFinancialRatiosCharts();
+            createCorrelationMatrix();
+            createStatisticalAnalysisCharts();
+            displayStatisticalSummary();
+        }
+
+        function displayFinancialSummaryStats(data) {
+            if (!data || data.length === 0) return;
+
+            const totalIncome = data.reduce((sum, row) => sum + (row['Event Income'] || 0), 0);
+            const totalExpenses = data.reduce((sum, row) => sum + (row['All Incurred Expenses'] || 0), 0);
+            const totalProfitLoss = data.reduce((sum, row) => sum + (row['Profit/Loss'] || 0), 0);
+            const profitableEvents = data.filter(row => (row['Profit/Loss'] || 0) > 0).length;
+            const totalEvents = data.length;
+
+            const statsContainer = document.getElementById('financialSummaryStats');
+            statsContainer.innerHTML = `
+                <div class="col-md-3">
+                    <div class="text-center p-3" style="background: #d4edda; border-radius: 8px; border: 2px solid #28a745;">
+                        <h5 class="text-success mb-1">💰 Total Income</h5>
+                        <h3 class="text-success mb-0">$${totalIncome.toLocaleString()}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3" style="background: #f8d7da; border-radius: 8px; border: 2px solid #dc3545;">
+                        <h5 class="text-danger mb-1">💸 Total Expenses</h5>
+                        <h3 class="text-danger mb-0">$${totalExpenses.toLocaleString()}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3" style="background: ${totalProfitLoss >= 0 ? '#d1ecf1' : '#fff3cd'}; border-radius: 8px; border: 2px solid ${totalProfitLoss >= 0 ? '#17a2b8' : '#ffc107'};">
+                        <h5 class="${totalProfitLoss >= 0 ? 'text-info' : 'text-warning'} mb-1">📈 Net Result</h5>
+                        <h3 class="${totalProfitLoss >= 0 ? 'text-info' : 'text-warning'} mb-0">$${totalProfitLoss.toLocaleString()}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3" style="background: #e2e3e5; border-radius: 8px; border: 2px solid #6c757d;">
+                        <h5 class="text-secondary mb-1">📊 Success Rate</h5>
+                        <h3 class="text-secondary mb-0">${Math.round((profitableEvents / totalEvents) * 100)}%</h3>
+                        <small class="text-muted">${profitableEvents}/${totalEvents} Profitable</small>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createFinancialSummaryChart() {
+            // Get the data from the current analysis
+            const data = currentAnalysis.data || [];
+            
+            if (!data || data.length === 0) {
+                document.getElementById('financialChart').innerHTML = `
+                    <div class="alert alert-info text-center">
+                        <h5><i class="fas fa-info-circle"></i> No Data Available</h5>
+                        <p>Add some events with financial data to see the chart.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Prepare data for the chart
+            const events = data.map(row => row['Event Name'] || 'Unnamed Event');
+            const income = data.map(row => row['Event Income'] || 0);
+            const expenses = data.map(row => row['All Incurred Expenses'] || 0);
+            const profitLoss = data.map(row => row['Profit/Loss'] || 0);
+
+            // Create the chart data with professional color scheme
+            const chartData = [
+                {
+                    name: 'Event Income',
+                    x: events,
+                    y: income,
+                    type: 'bar',
+                    marker: {
+                        color: '#059669', // Professional green
+                        line: { color: '#047857', width: 2 },
+                        opacity: 0.9
+                    },
+                    hovertemplate: '<div style="font-family: Inter, sans-serif; padding: 12px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"><b style="color: #1f2937; font-size: 14px;">%{x}</b><br><br><span style="color: #059669; font-weight: 600;">💰 Income:</span> <span style="font-weight: 700; color: #1f2937;">$%{y:,.0f}</span><br><span style="color: #6b7280; font-size: 12px;">Event Financial Performance</span></div><extra></extra>',
+                    hoverlabel: { 
+                        bgcolor: 'rgba(255,255,255,0.95)', 
+                        bordercolor: '#059669',
+                        font: { family: 'Inter, sans-serif', size: 12 }
+                    }
+                },
+                {
+                    name: 'All Incurred Expenses',
+                    x: events,
+                    y: expenses,
+                    type: 'bar',
+                    marker: {
+                        color: '#dc2626', // Professional red
+                        line: { color: '#b91c1c', width: 2 },
+                        opacity: 0.9
+                    },
+                    hovertemplate: '<div style="font-family: Inter, sans-serif; padding: 12px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"><b style="color: #1f2937; font-size: 14px;">%{x}</b><br><br><span style="color: #dc2626; font-weight: 600;">💸 Expenses:</span> <span style="font-weight: 700; color: #1f2937;">$%{y:,.0f}</span><br><span style="color: #6b7280; font-size: 12px;">Event Financial Performance</span></div><extra></extra>',
+                    hoverlabel: { 
+                        bgcolor: 'rgba(255,255,255,0.95)', 
+                        bordercolor: '#dc2626',
+                        font: { family: 'Inter, sans-serif', size: 12 }
+                    }
+                },
+                {
+                    name: 'Profit/Loss',
+                    x: events,
+                    y: profitLoss,
+                    type: 'bar',
+                    marker: {
+                        color: profitLoss.map(val => val >= 0 ? '#1e40af' : '#d97706'), // Professional blue/amber
+                        line: { 
+                            color: profitLoss.map(val => val >= 0 ? '#1e3a8a' : '#b45309'), 
+                            width: 2 
+                        },
+                        opacity: 0.9
+                    },
+                    hovertemplate: '<div style="font-family: Inter, sans-serif; padding: 12px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"><b style="color: #1f2937; font-size: 14px;">%{x}</b><br><br><span style="color: ' + (profitLoss.map(val => val >= 0 ? '#1e40af' : '#d97706')[0]) + '; font-weight: 600;">📈 Profit/Loss:</span> <span style="font-weight: 700; color: #1f2937;">$%{y:,.0f}</span><br><span style="color: #6b7280; font-size: 12px;">Event Financial Performance</span></div><extra></extra>',
+                    hoverlabel: { 
+                        bgcolor: 'rgba(255,255,255,0.95)', 
+                        bordercolor: profitLoss.map(val => val >= 0 ? '#1e40af' : '#d97706'),
+                        font: { family: 'Inter, sans-serif', size: 12 }
+                    }
+                }
+            ];
+
+            // Enhanced professional chart layout
+            const layout = {
+                title: {
+                    text: 'Financial Performance Dashboard',
+                    font: {
+                        size: 28,
+                        color: '#1f2937',
+                        family: 'Inter, sans-serif',
+                        weight: '700'
+                    },
+                    x: 0.5,
+                    y: 0.02,
+                    xanchor: 'center',
+                    yanchor: 'bottom',
+                    pad: { t: 20, b: 20 }
+                },
+                xaxis: {
+                    title: {
+                        text: 'Events',
+                        font: { size: 16, color: '#374151', family: 'Inter, sans-serif', weight: '600' }
+                    },
+                    tickangle: -45,
+                    tickfont: { size: 11, family: 'Inter, sans-serif', color: '#6b7280' },
+                    tickmode: 'array',
+                    ticktext: events.map(name => name.length > 18 ? name.substring(0, 18) + '...' : name),
+                    tickvals: events,
+                    showgrid: true,
+                    gridcolor: '#f3f4f6',
+                    gridwidth: 1,
+                    zeroline: false,
+                    linecolor: '#e5e7eb',
+                    linewidth: 1,
+                    showline: true
+                },
+                yaxis: {
+                    title: {
+                        text: 'Amount ($)',
+                        font: { size: 16, color: '#374151', family: 'Inter, sans-serif', weight: '600' }
+                    },
+                    tickformat: '$,.0f',
+                    showgrid: true,
+                    gridcolor: '#f3f4f6',
+                    gridwidth: 1,
+                    zeroline: true,
+                    zerolinecolor: '#e5e7eb',
+                    zerolinewidth: 1,
+                    linecolor: '#e5e7eb',
+                    linewidth: 1,
+                    tickfont: { size: 11, family: 'Inter, sans-serif', color: '#6b7280' },
+                    showline: true
+                },
+                barmode: 'group',
+                bargap: 0.2,
+                bargroupgap: 0.15,
+                showlegend: true,
+                legend: {
+                    x: 0.5,
+                    y: -0.15,
+                    xanchor: 'center',
+                    orientation: 'h',
+                    font: { size: 14, color: '#374151', family: 'Inter, sans-serif', weight: '500' },
+                    bgcolor: 'rgba(255,255,255,0.95)',
+                    bordercolor: '#e5e7eb',
+                    borderwidth: 1,
+                    itemwidth: 40,
+                    itemsizing: 'constant'
+                },
+                margin: {
+                    l: 100,
+                    r: 80,
+                    t: 60,
+                    b: 200
+                },
+                plot_bgcolor: '#ffffff',
+                paper_bgcolor: '#ffffff',
+                font: {
+                    family: 'Inter, sans-serif'
+                },
+                hovermode: 'closest',
+                hoverlabel: {
+                    bgcolor: 'rgba(255,255,255,0.95)',
+                    bordercolor: '#e5e7eb',
+                    font: { size: 12, family: 'Inter, sans-serif' },
+                    borderwidth: 1
+                },
+                annotations: [
+                    {
+                        text: 'Professional Financial Analysis • Ohio Wesleyan University',
+                        showarrow: false,
+                        x: 0.5,
+                        y: 1.02,
+                        xref: 'paper',
+                        yref: 'paper',
+                        font: { size: 12, color: '#9ca3af', family: 'Inter, sans-serif' }
+                    }
+                ]
+            };
+
+            // Create the chart
+            Plotly.newPlot('financialChart', chartData, layout, {
+                responsive: true,
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
+                displaylogo: false
+            });
+        }
+
+        function downloadEventData() {
+            if (!currentAnalysis || !currentAnalysis.data) {
+                alert('No data available to download');
+                return;
+            }
+
+            // Create CSV content with the same column order
+            const columnOrder = [
+                'Event Name',
+                'Date', 
+                'All Incurred Expenses',
+                'Event Income',
+                'Underwritten',
+                'Profit/Loss'
+            ];
+
+            const csvContent = [
+                columnOrder.join(','), // Header row
+                ...currentAnalysis.data.map(row => 
+                    columnOrder.map(header => {
+                        let value = row[header];
+                        // Format numbers and handle special characters
+                        if (typeof value === 'number') {
+                            return value.toFixed(2);
+                        } else if (typeof value === 'string' && value.includes(',')) {
+                            return `"${value}"`; // Quote strings with commas
+                        } else {
+                            return value || '';
+                        }
+                    }).join(',')
+                )
+            ].join('\n');
+
+            // Create and download the file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `OWU_Event_Data_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+
+
+        function showError(message) {
+            loadingSection.style.display = 'none';
+            errorSection.style.display = 'block';
+            document.getElementById('errorMessage').textContent = message;
+        }
+
+        // Advanced Chart Creation Functions
+
+        function createTrendAnalysisCharts() {
+            const data = currentAnalysis.data || [];
+            if (!data || data.length === 0) return;
+
+            // Sort data by date for trend analysis
+            const sortedData = [...data].sort((a, b) => new Date(a.Date) - new Date(b.Date));
+            
+            const dates = sortedData.map(row => row.Date);
+            const income = sortedData.map(row => row['Event Income'] || 0);
+            const expenses = sortedData.map(row => row['All Incurred Expenses'] || 0);
+            const profitLoss = sortedData.map(row => row['Profit/Loss'] || 0);
+
+            // Trend Chart
+            const trendData = [
+                {
+                    x: dates,
+                    y: income,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Income Trend',
+                    line: { color: '#28a745', width: 3 },
+                    marker: { size: 8, color: '#28a745' },
+                    hovertemplate: '<b>%{x}</b><br>💰 Income: $%{y:,.0f}<extra></extra>'
+                },
+                {
+                    x: dates,
+                    y: expenses,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Expenses Trend',
+                    line: { color: '#dc3545', width: 3 },
+                    marker: { size: 8, color: '#dc3545' },
+                    hovertemplate: '<b>%{x}</b><br>💸 Expenses: $%{y:,.0f}<extra></extra>'
+                },
+                {
+                    x: dates,
+                    y: profitLoss,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Profit/Loss Trend',
+                    line: { color: '#17a2b8', width: 3 },
+                    marker: { size: 8, color: '#17a2b8' },
+                    hovertemplate: '<b>%{x}</b><br>📈 Profit/Loss: $%{y:,.0f}<extra></extra>'
+                }
+            ];
+
+            const trendLayout = createStandardChartLayout('Financial Trends Over Time', 'bottom', {
+                xaxis: {
+                    title: 'Date',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                yaxis: {
+                    title: 'Amount ($)',
+                    tickformat: '$,.0f',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0',
+                    zeroline: true,
+                    zerolinecolor: '#d0d0d0'
+                }
+            });
+
+            Plotly.newPlot('trendChart', trendData, trendLayout, {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false
+            });
+
+            // Performance Chart (ROI Analysis)
+            const roi = sortedData.map(row => {
+                const income = row['Event Income'] || 0;
+                const expenses = row['All Incurred Expenses'] || 0;
+                return expenses > 0 ? ((income - expenses) / expenses) * 100 : 0;
+            });
+
+            const performanceData = [{
+                x: dates,
+                y: roi,
+                type: 'bar',
+                name: 'ROI %',
+                marker: {
+                    color: roi.map(val => val >= 0 ? '#28a745' : '#dc3545'),
+                    line: { color: 'rgba(0,0,0,0.1)', width: 1 }
+                },
+                hovertemplate: '<b>%{x}</b><br>📊 ROI: %{y:.1f}%<extra></extra>'
+            }];
+
+            const performanceLayout = createStandardChartLayout('Return on Investment (ROI)', 'bottom', {
+                xaxis: {
+                    title: 'Date',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                yaxis: {
+                    title: 'ROI (%)',
+                    tickformat: '.1f',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0',
+                    zeroline: true,
+                    zerolinecolor: '#d0d0d0'
+                },
+                showlegend: false
+            });
+
+            Plotly.newPlot('performanceChart', performanceData, performanceLayout, {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false
+            });
+        }
+
+        function createFinancialRatiosCharts() {
+            const data = currentAnalysis.data || [];
+            if (!data || data.length === 0) return;
+
+            const events = data.map(row => row['Event Name'] || 'Unnamed Event');
+            const income = data.map(row => row['Event Income'] || 0);
+            const expenses = data.map(row => row['All Incurred Expenses'] || 0);
+            const underwritten = data.map(row => row['Underwritten'] || 0);
+
+            // Calculate ratios
+            const profitMargins = data.map(row => {
+                const income = row['Event Income'] || 0;
+                const expenses = row['All Incurred Expenses'] || 0;
+                return income > 0 ? ((income - expenses) / income) * 100 : 0;
+            });
+
+            const costRatios = data.map(row => {
+                const income = row['Event Income'] || 0;
+                const expenses = row['All Incurred Expenses'] || 0;
+                return income > 0 ? (expenses / income) * 100 : 0;
+            });
+
+            // Financial Ratios Chart
+            const ratiosData = [
+                {
+                    x: events,
+                    y: profitMargins,
+                    type: 'bar',
+                    name: 'Profit Margin %',
+                    marker: {
+                        color: profitMargins.map(val => val >= 0 ? '#28a745' : '#dc3545'),
+                        line: { color: 'rgba(0,0,0,0.1)', width: 1 }
+                    },
+                    hovertemplate: '<b>%{x}</b><br>📊 Profit Margin: %{y:.1f}%<extra></extra>'
+                }
+            ];
+
+            const ratiosLayout = createStandardChartLayout('Profit Margin Analysis', 'bottom', {
+                xaxis: {
+                    title: 'Events',
+                    tickangle: -45,
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                yaxis: {
+                    title: 'Profit Margin (%)',
+                    tickformat: '.1f',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0',
+                    zeroline: true,
+                    zerolinecolor: '#d0d0d0'
+                },
+                showlegend: false,
+                margin: { l: 80, r: 50, t: 40, b: 120 }
+            });
+
+            Plotly.newPlot('ratiosChart', ratiosData, ratiosLayout, {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false
+            });
+
+            // Efficiency Chart
+            const efficiencyData = [{
+                x: events,
+                y: costRatios,
+                type: 'bar',
+                name: 'Cost Ratio %',
+                marker: {
+                    color: costRatios.map(val => val <= 50 ? '#28a745' : val <= 80 ? '#ffc107' : '#dc3545'),
+                    line: { color: 'rgba(0,0,0,0.1)', width: 1 }
+                },
+                hovertemplate: '<b>%{x}</b><br>💰 Cost Ratio: %{y:.1f}%<extra></extra>'
+            }];
+
+            const efficiencyLayout = createStandardChartLayout('Cost Efficiency Analysis', 'bottom', {
+                xaxis: {
+                    title: 'Events',
+                    tickangle: -45,
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                yaxis: {
+                    title: 'Cost Ratio (%)',
+                    tickformat: '.1f',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0',
+                    zeroline: true,
+                    zerolinecolor: '#d0d0d0'
+                },
+                showlegend: false,
+                margin: { l: 80, r: 50, t: 40, b: 120 }
+            });
+
+            Plotly.newPlot('efficiencyChart', efficiencyData, efficiencyLayout, {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false
+            });
+        }
+
+        function createCorrelationMatrix() {
+            const data = currentAnalysis.data || [];
+            if (!data || data.length === 0) return;
+
+            // Prepare data for correlation analysis
+            const numericData = data.map(row => ({
+                income: row['Event Income'] || 0,
+                expenses: row['All Incurred Expenses'] || 0,
+                underwritten: row['Underwritten'] || 0,
+                profitLoss: row['Profit/Loss'] || 0
+            }));
+
+            // Calculate correlation matrix
+            const fields = ['income', 'expenses', 'underwritten', 'profitLoss'];
+            const labels = ['Income', 'Expenses', 'Underwritten', 'Profit/Loss'];
+            const correlationMatrix = [];
+
+            fields.forEach((field1, i) => {
+                const row = [];
+                fields.forEach((field2, j) => {
+                    const correlation = calculateCorrelation(
+                        numericData.map(d => d[field1]),
+                        numericData.map(d => d[field2])
+                    );
+                    row.push(correlation);
+                });
+                correlationMatrix.push(row);
+            });
+
+            const correlationData = [{
+                z: correlationMatrix,
+                x: labels,
+                y: labels,
+                type: 'heatmap',
+                colorscale: [
+                    [0, '#dc3545'],
+                    [0.5, '#ffffff'],
+                    [1, '#28a745']
+                ],
+                showscale: true,
+                hovertemplate: '<b>%{y} vs %{x}</b><br>Correlation: %{z:.3f}<extra></extra>'
+            }];
+
+            const correlationLayout = createStandardChartLayout('Financial Metrics Correlation Matrix', 'bottom', {
+                xaxis: {
+                    title: 'Financial Metrics',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                yaxis: {
+                    title: 'Financial Metrics',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                showlegend: false,
+                margin: { l: 100, r: 50, t: 40, b: 80 }
+            });
+
+            Plotly.newPlot('correlationChart', correlationData, correlationLayout, {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false
+            });
+        }
+
+        function createStatisticalAnalysisCharts() {
+            const data = currentAnalysis.data || [];
+            if (!data || data.length === 0) return;
+
+            const income = data.map(row => row['Event Income'] || 0);
+            const expenses = data.map(row => row['All Incurred Expenses'] || 0);
+            const profitLoss = data.map(row => row['Profit/Loss'] || 0);
+
+            // Distribution Chart
+            const distributionData = [
+                {
+                    x: income,
+                    type: 'histogram',
+                    name: 'Income Distribution',
+                    marker: { color: '#28a745', opacity: 0.7 },
+                    nbinsx: 10,
+                    hovertemplate: 'Income: $%{x:,.0f}<br>Count: %{y}<extra></extra>'
+                },
+                {
+                    x: expenses,
+                    type: 'histogram',
+                    name: 'Expenses Distribution',
+                    marker: { color: '#dc3545', opacity: 0.7 },
+                    nbinsx: 10,
+                    hovertemplate: 'Expenses: $%{x:,.0f}<br>Count: %{y}<extra></extra>'
+                }
+            ];
+
+            const distributionLayout = createStandardChartLayout('Financial Data Distribution', 'bottom', {
+                xaxis: {
+                    title: 'Amount ($)',
+                    tickformat: '$,.0f',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                yaxis: {
+                    title: 'Frequency',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                barmode: 'overlay'
+            });
+
+            Plotly.newPlot('distributionChart', distributionData, distributionLayout, {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false
+            });
+
+            // Box Plot Chart
+            const boxPlotData = [
+                {
+                    y: income,
+                    type: 'box',
+                    name: 'Income',
+                    marker: { color: '#28a745' },
+                    boxpoints: 'outliers',
+                    hovertemplate: 'Income: $%{y:,.0f}<extra></extra>'
+                },
+                {
+                    y: expenses,
+                    type: 'box',
+                    name: 'Expenses',
+                    marker: { color: '#dc3545' },
+                    boxpoints: 'outliers',
+                    hovertemplate: 'Expenses: $%{y:,.0f}<extra></extra>'
+                },
+                {
+                    y: profitLoss,
+                    type: 'box',
+                    name: 'Profit/Loss',
+                    marker: { color: '#17a2b8' },
+                    boxpoints: 'outliers',
+                    hovertemplate: 'Profit/Loss: $%{y:,.0f}<extra></extra>'
+                }
+            ];
+
+            const boxPlotLayout = createStandardChartLayout('Statistical Summary (Box Plots)', 'bottom', {
+                xaxis: {
+                    title: 'Financial Metrics',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                },
+                yaxis: {
+                    title: 'Amount ($)',
+                    tickformat: '$,.0f',
+                    showgrid: true,
+                    gridcolor: '#f0f0f0'
+                }
+            });
+            
+            Plotly.newPlot('boxPlotChart', boxPlotData, boxPlotLayout, {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false
+            });
+        }
+
+        function displayStatisticalSummary() {
+            const data = currentAnalysis.data || [];
+            if (!data || data.length === 0) return;
+
+            const income = data.map(row => row['Event Income'] || 0);
+            const expenses = data.map(row => row['All Incurred Expenses'] || 0);
+            const profitLoss = data.map(row => row['Profit/Loss'] || 0);
+
+            // Calculate statistical metrics
+            const incomeStats = calculateStatistics(income);
+            const expensesStats = calculateStatistics(expenses);
+            const profitLossStats = calculateStatistics(profitLoss);
+
+            const statisticalSummary = document.getElementById('statisticalSummary');
+            statisticalSummary.innerHTML = `
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0"><i class="fas fa-chart-line"></i> Income Statistics</h6>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Mean:</strong> $${incomeStats.mean.toLocaleString()}</p>
+                            <p><strong>Median:</strong> $${incomeStats.median.toLocaleString()}</p>
+                            <p><strong>Std Dev:</strong> $${incomeStats.stdDev.toLocaleString()}</p>
+                            <p><strong>Min:</strong> $${incomeStats.min.toLocaleString()}</p>
+                            <p><strong>Max:</strong> $${incomeStats.max.toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-danger text-white">
+                            <h6 class="mb-0"><i class="fas fa-chart-line"></i> Expenses Statistics</h6>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Mean:</strong> $${expensesStats.mean.toLocaleString()}</p>
+                            <p><strong>Median:</strong> $${expensesStats.median.toLocaleString()}</p>
+                            <p><strong>Std Dev:</strong> $${expensesStats.stdDev.toLocaleString()}</p>
+                            <p><strong>Min:</strong> $${expensesStats.min.toLocaleString()}</p>
+                            <p><strong>Max:</strong> $${expensesStats.max.toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0"><i class="fas fa-chart-line"></i> Profit/Loss Statistics</h6>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Mean:</strong> $${profitLossStats.mean.toLocaleString()}</p>
+                            <p><strong>Median:</strong> $${profitLossStats.median.toLocaleString()}</p>
+                            <p><strong>Std Dev:</strong> $${profitLossStats.stdDev.toLocaleString()}</p>
+                            <p><strong>Min:</strong> $${profitLossStats.min.toLocaleString()}</p>
+                            <p><strong>Max:</strong> $${profitLossStats.max.toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Helper Functions
+        function calculateCorrelation(x, y) {
+            const n = x.length;
+            const sumX = x.reduce((a, b) => a + b, 0);
+            const sumY = y.reduce((a, b) => a + b, 0);
+            const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+            const sumX2 = x.reduce((sum, xi) => sum + xi * xi, 0);
+            const sumY2 = y.reduce((sum, yi) => sum + yi * yi, 0);
+            
+            const numerator = n * sumXY - sumX * sumY;
+            const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+            
+            return denominator === 0 ? 0 : numerator / denominator;
+        }
+
+        function calculateStatistics(data) {
+            const sorted = [...data].sort((a, b) => a - b);
+            const n = data.length;
+            
+            const mean = data.reduce((sum, val) => sum + val, 0) / n;
+            const median = n % 2 === 0 
+                ? (sorted[n/2 - 1] + sorted[n/2]) / 2 
+                : sorted[Math.floor(n/2)];
+            
+            const variance = data.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / n;
+            const stdDev = Math.sqrt(variance);
+            
+            return {
+                mean: mean,
+                median: median,
+                stdDev: stdDev,
+                min: Math.min(...data),
+                max: Math.max(...data)
+            };
+        }
+
+        // Chart Configuration Helper Functions
+        function createChartTitleConfig(title, position = 'bottom') {
+            const baseConfig = {
+                text: title,
+                font: { size: 20, color: '#1a1a1a', family: 'Georgia, serif' }
+            };
+            
+            if (position === 'bottom') {
+                return {
+                    ...baseConfig,
+                    x: 0.5,
+                    y: 0.02,
+                    xanchor: 'center',
+                    yanchor: 'bottom'
+                };
+            }
+            
+            return baseConfig;
+        }
+
+        function createChartMargins(position = 'bottom') {
+            if (position === 'bottom') {
+                return { l: 80, r: 50, t: 40, b: 80 };
+            }
+            return { l: 80, r: 50, t: 60, b: 60 };
+        }
+
+        function createStandardChartLayout(title, position = 'bottom', additionalConfig = {}) {
+            return {
+                title: createChartTitleConfig(title, position),
+                plot_bgcolor: '#ffffff',
+                paper_bgcolor: '#ffffff',
+                font: { family: 'Georgia, serif' },
+                margin: createChartMargins(position),
+                showlegend: true,
+                legend: { x: 0.8, y: 0.9 },
+                ...additionalConfig
+            };
+        }
+    </script>
+</body>
+</html>

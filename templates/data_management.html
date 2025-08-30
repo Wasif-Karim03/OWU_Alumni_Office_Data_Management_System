@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ohio Wesleyan University - Data Management</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Circe+Slab:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --owu-white: #ffffff;
+            --owu-black: #1a1a1a;
+            --owu-red: #d32f2f;
+            --owu-dark-red: #b71c1c;
+            --owu-dark-gray: #2c2c2c;
+            --owu-light-gray: #f8f9fa;
+            --owu-border: #e0e0e0;
+            --owu-gradient: linear-gradient(135deg, #a41d33 0%, #b71c1c 100%);
+            --owu-shadow: 0 8px 32px rgba(164, 29, 51, 0.1);
+            --owu-shadow-hover: 0 12px 40px rgba(164, 29, 51, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Circe Slab', 'Georgia', serif;
+            background: linear-gradient(135deg, var(--owu-white) 0%, var(--owu-light-gray) 100%);
+            color: var(--owu-black);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            background: var(--owu-white);
+            box-shadow: var(--owu-shadow);
+            margin: 0;
+            overflow: hidden;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            background: var(--owu-gradient);
+            color: var(--owu-white);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .university-logo {
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
+            opacity: 0.95;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            color: var(--owu-white);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-style: normal;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0;
+        }
+
+        .content-section {
+            padding: 4rem 2rem;
+            background: var(--owu-white);
+            position: relative;
+        }
+
+        .nav-tabs {
+            border-bottom: none;
+            background: var(--owu-light-gray);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--owu-dark-gray);
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            margin: 0 0.25rem;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--owu-red);
+            background: rgba(208, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--owu-white);
+            background: var(--owu-gradient);
+            border-bottom: none;
+            box-shadow: 0 4px 15px rgba(208, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs .nav-link i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: var(--owu-white);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--owu-shadow-hover);
+        }
+
+        .card-header {
+            background: var(--owu-gradient);
+            border-bottom: none;
+            color: var(--owu-white);
+            font-weight: 700;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .card-header h4 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .card-header i {
+            margin-right: 0.75rem;
+            font-size: 1.3rem;
+        }
+
+        .btn-primary {
+            background: var(--owu-gradient);
+            border: none;
+            border-radius: 10px;
+            padding: 0.875rem 2.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(208, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(208, 0, 0, 0.4);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-success {
+            background: var(--owu-red);
+            border: none;
+            border-radius: 10px;
+            padding: 0.875rem 2.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-success:hover {
+            background: var(--owu-dark-red);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.4);
+        }
+
+        .btn-danger {
+            background: var(--owu-dark-red);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.25rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(183, 28, 28, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: var(--owu-red);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(183, 28, 28, 0.4);
+        }
+
+        .form-control {
+            border: 2px solid var(--owu-border);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--owu-white);
+        }
+
+        .form-control:focus {
+            border-color: #a41d33;
+            box-shadow: 0 0 0 0.2rem rgba(164, 29, 51, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--owu-black);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .form-text {
+            color: var(--owu-dark-gray);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Enhanced Form Styling - Matching Landing Page */
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #a41d33 0%, #d32f2f 100%);
+            border-bottom: 2px solid #a41d33;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1rem 1.5rem;
+            font-family: 'Circe Slab', 'Georgia', serif;
+            color: #ffffff;
+        }
+
+        .card-header.bg-primary {
+            background: linear-gradient(135deg, #a41d33 0%, #d32f2f 100%) !important;
+            color: #ffffff;
+        }
+
+        .form-check-input:checked {
+            background-color: #a41d33;
+            border-color: #a41d33;
+        }
+
+        .form-check-input:focus {
+            border-color: #a41d33;
+            box-shadow: 0 0 0 0.2rem rgba(164, 29, 51, 0.25);
+        }
+
+        .collapse {
+            transition: all 0.3s ease;
+        }
+
+        .collapse.show {
+            display: block !important;
+        }
+
+        .input-group-text {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            color: #2c2c2c;
+            font-weight: 600;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            color: #e65100;
+            border-left: 4px solid #a41d33;
+        }
+
+        .text-primary {
+            color: #a41d33 !important;
+        }
+
+        /* Form check labels in card headers */
+        .card-header .form-check-label {
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        /* Icons in card headers */
+        .card-header i {
+            color: #ffffff !important;
+        }
+
+        /* Card header text */
+        .card-header h6 {
+            color: #ffffff !important;
+        }
+
+        .modal-xl {
+            max-width: 90%;
+        }
+
+        @media (max-width: 768px) {
+            .modal-xl {
+                max-width: 95%;
+            }
+        }
+
+        .table {
+            font-size: 0.9rem;
+        }
+
+        .table thead th {
+            background: var(--owu-light-gray);
+            border-bottom: 2px solid var(--owu-red);
+            color: var(--owu-black);
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .modal {
+            z-index: 9999 !important;
+        }
+
+        .modal-backdrop {
+            z-index: 9998 !important;
+        }
+
+        .modal-header {
+            background: var(--owu-black);
+            color: var(--owu-white);
+            border-bottom: 3px solid var(--owu-red);
+        }
+
+        .modal-title {
+            color: var(--owu-white);
+            font-weight: 700;
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+
+        .alert {
+            border-radius: 6px;
+            border: none;
+            padding: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid var(--owu-red);
+        }
+
+        .file-card {
+            border: none;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            background: var(--owu-white);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .file-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--owu-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .file-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--owu-shadow-hover);
+        }
+
+        .file-card:hover::before {
+            width: 8px;
+        }
+
+        .file-card h5 {
+            color: var(--owu-black);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .file-card p {
+            color: var(--owu-dark-gray);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .file-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--owu-light-gray);
+            border-radius: 12px;
+            min-width: 100px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--owu-border);
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--owu-gradient);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(164, 29, 51, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--owu-red);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--owu-dark-gray);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--owu-white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            z-index: 1000;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(26, 26, 26, 0.8);
+        }
+
+        .back-button:hover {
+            color: var(--owu-red);
+            background: rgba(26, 26, 26, 1);
+            transform: translateX(-5px);
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #a41d33;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: #8b1a2a;
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Enhanced Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--owu-dark-gray);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--owu-red);
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .empty-state h5 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--owu-black);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content-section {
+                padding: 2rem 1rem;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .file-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stat-item {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+                    <a href="/visualizer" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Visualizer
+        </a>
+        <a href="/logout" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+        <div class="university-logo">OHIO WESLEYAN UNIVERSITY</div>
+        <h1><i class="fas fa-database"></i> Data Management</h1>
+        <p>Manage your OWU event financial data</p>
+        </div>
+
+        <!-- Content Section -->
+        <div class="content-section fade-in">
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs" id="dataTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="files-tab" data-bs-toggle="tab" data-bs-target="#files" type="button" role="tab">
+                        <i class="fas fa-folder"></i> Event Files
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="create-tab" data-bs-toggle="tab" data-bs-target="#create" type="button" role="tab">
+                        <i class="fas fa-plus"></i> Create New File
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="help-tab" data-bs-toggle="tab" data-bs-target="#help" type="button" role="tab">
+                        <i class="fas fa-question-circle"></i> Help
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="dataTabsContent">
+                <!-- Files Tab -->
+                <div class="tab-pane fade show active" id="files" role="tabpanel">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4><i class="fas fa-folder-open"></i> Your Event Files</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="filesList">
+                                        <!-- Files will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Tab -->
+                <div class="tab-pane fade" id="create" role="tabpanel">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4><i class="fas fa-plus"></i> Create New Event File</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form id="createFileForm">
+                                        <div class="mb-3">
+                                            <label for="fileName" class="form-label">File Name</label>
+                                            <input type="text" class="form-control" id="fileName" placeholder="e.g., Fall 2024 Events, Spring 2025 Events" required>
+                                            <div class="form-text">Give your event file a descriptive name</div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-plus"></i> Create File
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help Tab -->
+                <div class="tab-pane fade" id="help" role="tabpanel">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4><i class="fas fa-question-circle"></i> How to Use Data Management</h4>
+                                </div>
+                                <div class="card-body">
+                                    <h5>📁 Creating Event Files</h5>
+                                    <ol>
+                                        <li>Go to the "Create New File" tab</li>
+                                        <li>Enter a descriptive name for your event file</li>
+                                        <li>Click "Create File" to start a new collection</li>
+                                    </ol>
+
+                                    <h5>➕ Adding Events</h5>
+                                    <ol>
+                                        <li>Open an existing event file</li>
+                                        <li>Click "Add New Event"</li>
+                                        <li>Fill in the event details:
+                                            <ul>
+                                                <li><strong>Date:</strong> Event date</li>
+                                                <li><strong>Event Name:</strong> Name of the event</li>
+                                                <li><strong>Event Income:</strong> Revenue from the event</li>
+                                                <li><strong>All Incurred Expenses:</strong> Food, beverage, rental costs</li>
+                                                <li><strong>Underwritten:</strong> Sponsored amounts</li>
+                                            </ul>
+                                        </li>
+                                        <li>Profit/Loss is automatically calculated</li>
+                                    </ol>
+
+                                    <h5>✏️ Managing Your Data</h5>
+                                    <ul>
+                                        <li><strong>Edit:</strong> Click the edit button to modify event details</li>
+                                        <li><strong>Delete:</strong> Remove individual events or entire files</li>
+                                        <li><strong>Export:</strong> Download your data as Excel files</li>
+                                        <li><strong>Visualize:</strong> Use the main visualizer to create charts</li>
+                                    </ul>
+
+                                    <h5>💡 Tips</h5>
+                                    <ul>
+                                        <li>Use descriptive file names (e.g., "Fall 2024 Alumni Events")</li>
+                                        <li>Keep event names consistent and clear</li>
+                                        <li>Enter all amounts as positive numbers (expenses will be calculated as negative)</li>
+                                        <li>Export your data regularly for backup</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalTitle">Add New Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+                    <form id="eventForm">
+                        <input type="hidden" id="eventId">
+                        <input type="hidden" id="fileId">
+                        
+                        <!-- Basic Event Information (Always Required) -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0"><i class="fas fa-info-circle"></i> Basic Event Information</h6>
+                            </div>
+                            <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                            <label for="eventDate" class="form-label">Event Date *</label>
+                                    <input type="date" class="form-control" id="eventDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                            <label for="eventName" class="form-label">Event Name *</label>
+                                    <input type="text" class="form-control" id="eventName" placeholder="e.g., OWU Football Golf Outing" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="eventLocation" class="form-label">Location *</label>
+                                            <input type="text" class="form-control" id="eventLocation" placeholder="e.g., Columbus, OH" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="eventDescription" class="form-label">Description *</label>
+                                            <textarea class="form-control" id="eventDescription" rows="2" placeholder="Brief description of the event" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Income / Expense Snapshot Section -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="fas fa-dollar-sign"></i> Income / Expense Snapshot</h6>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="includeIncomeExpense" onchange="toggleSection('incomeExpenseSection', this.checked)">
+                                    <label class="form-check-label" for="includeIncomeExpense">Include this section</label>
+                                </div>
+                            </div>
+                            <div class="card-body collapse" id="incomeExpenseSection">
+                        <div class="row">
+                                    <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="eventIncome" class="form-label">Event Income</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="eventIncome" placeholder="0.00" step="0.01" min="0" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                                    <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="eventExpenses" class="form-label">All Incurred Expenses</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="eventExpenses" placeholder="0.00" step="0.01" min="0" value="0">
+                                    </div>
+                                    <div class="form-text">Food, beverage, rental, etc.</div>
+                                </div>
+                            </div>
+                                    <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="eventUnderwritten" class="form-label">Underwritten</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="eventUnderwritten" placeholder="0.00" step="0.01" min="0" value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Profit/Loss</label>
+                                            <div class="alert alert-info mb-0">
+                                                <strong id="profitLossPreview">$0.00</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attendance Section -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="fas fa-users"></i> Attendance</h6>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="includeAttendance" onchange="toggleSection('attendanceSection', this.checked)">
+                                    <label class="form-check-label" for="includeAttendance">Include this section</label>
+                                </div>
+                            </div>
+                            <div class="card-body collapse" id="attendanceSection">
+                        <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-primary">Alumni Breakdown</h6>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="yaStartYear" class="form-label">Young Alumni Start Year</label>
+                                                    <input type="number" class="form-control" id="yaStartYear" placeholder="2014" min="1900" max="2100" value="2014" onchange="updateYALabel()">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="yaEndYear" class="form-label">Young Alumni End Year</label>
+                                                    <input type="number" class="form-control" id="yaEndYear" placeholder="2024" min="1900" max="2100" value="2024" onchange="updateYALabel()">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="alumniCutoffYear" class="form-label">Alumni Cutoff Year</label>
+                                                    <input type="number" class="form-control" id="alumniCutoffYear" placeholder="2013" min="1900" max="2100" value="2013" onchange="updateYALabel()">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="yaRegistered" class="form-label" id="yaRegisteredLabel">Young Alumni Registered (2014–2024)</label>
+                                                    <input type="number" class="form-control" id="yaRegistered" placeholder="0" min="0" value="0" onchange="calculateAttendanceTotals()">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="alumniRegistered" class="form-label" id="alumniRegisteredLabel">Alumni Registered: up to 2013</label>
+                                                    <input type="number" class="form-control" id="alumniRegistered" placeholder="0" min="0" value="0" onchange="calculateAttendanceTotals()">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="totalAlumniAttended" class="form-label">Total Alumni Attended</label>
+                                            <input type="number" class="form-control" id="totalAlumniAttended" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-primary">Other Attendees</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="studentsAttended" class="form-label">Students</label>
+                                                    <input type="number" class="form-control" id="studentsAttended" placeholder="0" min="0" value="0">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="friendsFamilyAttended" class="form-label">Friends/Family</label>
+                                                    <input type="number" class="form-control" id="friendsFamilyAttended" placeholder="0" min="0" value="0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="staffFacultyAttended" class="form-label">Staff/Faculty</label>
+                                            <input type="number" class="form-control" id="staffFacultyAttended" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="totalAlumniGuests" class="form-label">Total # Alumni/Guests</label>
+                                            <input type="number" class="form-control" id="totalAlumniGuests" placeholder="0" min="0" value="0" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="percentYAAttendees" class="form-label">% of Young Alumni Attendees</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="percentYAAttendees" placeholder="0" min="0" max="100" step="0.1" value="0" readonly>
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="percentNonYAAttendees" class="form-label">% of non-Young Alumni Attendees</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="percentNonYAAttendees" placeholder="0" min="0" max="100" step="0.1" value="0" readonly>
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 1st Time Event Attendees Section -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="fas fa-star"></i> 1st Time Event Attendees (Ever)</h6>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="includeFirstTime" onchange="toggleSection('firstTimeSection', this.checked)">
+                                    <label class="form-check-label" for="includeFirstTime">Include this section</label>
+                                </div>
+                            </div>
+                            <div class="card-body collapse" id="firstTimeSection">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="firstTimeAlumni" class="form-label"># of Alumni (first-time)</label>
+                                            <input type="number" class="form-control" id="firstTimeAlumni" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="firstTimeParents" class="form-label"># of Parents (first-time)</label>
+                                            <input type="number" class="form-control" id="firstTimeParents" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="firstTimeFriends" class="form-label"># of Friends (first-time)</label>
+                                            <input type="number" class="form-control" id="firstTimeFriends" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Almabase Feedback Rating Section -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="fas fa-star-half-alt"></i> Almabase Feedback Rating (Unsolicited)</h6>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="includeFeedback" onchange="toggleSection('feedbackSection', this.checked)">
+                                    <label class="form-check-label" for="includeFeedback">Include this section</label>
+                                </div>
+                            </div>
+                            <div class="card-body collapse" id="feedbackSection">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="mb-3">
+                                            <label for="rating5Stars" class="form-label">5 Stars</label>
+                                            <input type="number" class="form-control" id="rating5Stars" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="mb-3">
+                                            <label for="rating4Stars" class="form-label">4 Stars</label>
+                                            <input type="number" class="form-control" id="rating4Stars" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="mb-3">
+                                            <label for="rating3Stars" class="form-label">3 Stars</label>
+                                            <input type="number" class="form-control" id="rating3Stars" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="mb-3">
+                                            <label for="rating2Stars" class="form-label">2 Stars</label>
+                                            <input type="number" class="form-control" id="rating2Stars" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="mb-3">
+                                            <label for="rating1Star" class="form-label">1 Star</label>
+                                            <input type="number" class="form-control" id="rating1Star" placeholder="0" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="mb-3">
+                                            <label class="form-label">Total Ratings</label>
+                                            <div class="alert alert-info mb-0">
+                                                <strong id="totalRatings">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveEventBtn">
+                        <i class="fas fa-save"></i> Save Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Details Modal -->
+    <div class="modal fade" id="fileDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileDetailsTitle">Event File Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <button class="btn btn-primary" id="addEventBtn">
+                                <i class="fas fa-plus"></i> Add New Event
+                            </button>
+                            <button class="btn btn-success ms-2" id="exportFileBtn">
+                                <i class="fas fa-download"></i> Export to Excel
+                            </button>
+                            <button class="btn btn-info ms-2" id="visualizeFileBtn">
+                                <i class="fas fa-chart-bar"></i> Visualize Data
+                            </button>
+                            <button class="btn btn-danger ms-2" id="deleteFileBtn">
+                                <i class="fas fa-trash"></i> Delete File
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="eventsTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Event Name</th>
+                                    <th>Income</th>
+                                    <th>Expenses</th>
+                                    <th>Underwritten</th>
+                                    <th>Profit/Loss</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventsTableBody">
+                                <!-- Events will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Global variables
+        let currentFileId = null;
+        let currentFileData = null;
+        let isEditMode = false;
+
+        // DOM elements
+        const filesList = document.getElementById('filesList');
+        const createFileForm = document.getElementById('createFileForm');
+        const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+        const fileDetailsModal = new bootstrap.Modal(document.getElementById('fileDetailsModal'));
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFiles();
+            setupEventListeners();
+            
+            // Ensure back button works properly
+            const backButton = document.querySelector('.back-button');
+            if (backButton) {
+                backButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Back button clicked, navigating to main visualizer...');
+                    window.location.href = '/visualizer';
+                });
+            }
+        });
+
+        function setupEventListeners() {
+            // Create file form
+            createFileForm.addEventListener('submit', handleCreateFile);
+
+            // Event form inputs for real-time calculation
+            document.getElementById('eventIncome').addEventListener('input', updateProfitLoss);
+            document.getElementById('eventExpenses').addEventListener('input', updateProfitLoss);
+            document.getElementById('eventUnderwritten').addEventListener('input', updateProfitLoss);
+
+            // Rating inputs for real-time total calculation
+            document.getElementById('rating5Stars').addEventListener('input', updateTotalRatings);
+            document.getElementById('rating4Stars').addEventListener('input', updateTotalRatings);
+            document.getElementById('rating3Stars').addEventListener('input', updateTotalRatings);
+            document.getElementById('rating2Stars').addEventListener('input', updateTotalRatings);
+            document.getElementById('rating1Star').addEventListener('input', updateTotalRatings);
+
+            // Attendance inputs for real-time calculation
+            document.getElementById('studentsAttended').addEventListener('input', calculateAttendanceTotals);
+            document.getElementById('friendsFamilyAttended').addEventListener('input', calculateAttendanceTotals);
+            document.getElementById('staffFacultyAttended').addEventListener('input', calculateAttendanceTotals);
+
+            // Save event button
+            document.getElementById('saveEventBtn').addEventListener('click', handleSaveEvent);
+
+            // Modal buttons
+            document.getElementById('addEventBtn').addEventListener('click', showAddEventModal);
+            document.getElementById('exportFileBtn').addEventListener('click', exportFile);
+            document.getElementById('visualizeFileBtn').addEventListener('click', visualizeFile);
+            document.getElementById('deleteFileBtn').addEventListener('click', deleteFile);
+        }
+
+        function loadFiles() {
+            fetch('/api/files')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayFiles(data.files);
+                    } else {
+                        showAlert('Error loading files: ' + data.error, 'danger');
+                    }
+                })
+                .catch(error => {
+                    showAlert('Error loading files: ' + error.message, 'danger');
+                });
+        }
+
+        function displayFiles(files) {
+            if (files.length === 0) {
+                filesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h5>No event files yet</h5>
+                        <p>Create your first event file to get started!</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('create-tab').click()">
+                            <i class="fas fa-plus"></i> Create Your First File
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            filesList.innerHTML = files.map((file, index) => `
+                <div class="file-card slide-up" style="animation-delay: ${index * 0.1}s">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5>${file.name}</h5>
+                            <p>
+                                Created: ${file.created_date} | 
+                                Last Modified: ${file.last_modified}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-primary btn-sm" onclick="openFile('${file.id}')">
+                                <i class="fas fa-eye"></i> View Events
+                            </button>
+                            <button class="btn btn-danger btn-sm ms-2" onclick="deleteFile('${file.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="file-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">${file.event_count}</div>
+                            <div class="stat-label">Events</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleCreateFile(event) {
+            event.preventDefault();
+            
+            const fileName = document.getElementById('fileName').value;
+            
+            fetch('/api/files', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: fileName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('File created successfully!', 'success');
+                    document.getElementById('fileName').value = '';
+                    loadFiles();
+                    // Switch to files tab
+                    document.getElementById('files-tab').click();
+                } else {
+                    showAlert('Error creating file: ' + data.error, 'danger');
+                }
+            })
+            .catch(error => {
+                showAlert('Error creating file: ' + error.message, 'danger');
+            });
+        }
+
+        function openFile(fileId) {
+            currentFileId = fileId;
+            
+            fetch(`/api/files/${fileId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentFileData = data.data;
+                        displayFileDetails(data.data);
+                        fileDetailsModal.show();
+                    } else {
+                        showAlert('Error loading file: ' + data.error, 'danger');
+                    }
+                })
+                .catch(error => {
+                    showAlert('Error loading file: ' + error.message, 'danger');
+                });
+        }
+
+        function displayFileDetails(fileData) {
+            document.getElementById('fileDetailsTitle').textContent = fileData.name;
+            
+            const tbody = document.getElementById('eventsTableBody');
+            if (fileData.events.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="fas fa-calendar-plus fa-2x mb-3"></i>
+                            <h6>No events yet</h6>
+                            <p>Click "Add New Event" to get started!</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = fileData.events.map(event => `
+                    <tr>
+                        <td>${event.date}</td>
+                        <td>${event.name}</td>
+                        <td>$${event.income.toFixed(2)}</td>
+                        <td>$${event.expenses.toFixed(2)}</td>
+                        <td>$${event.underwritten.toFixed(2)}</td>
+                        <td class="${event.profit_loss >= 0 ? 'text-success' : 'text-danger'}">
+                            $${event.profit_loss.toFixed(2)}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="editEvent('${event.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger ms-1" onclick="deleteEvent('${event.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function showAddEventModal() {
+            isEditMode = false;
+            document.getElementById('eventModalTitle').textContent = 'Add New Event';
+            document.getElementById('eventForm').reset();
+            document.getElementById('eventId').value = '';
+            document.getElementById('fileId').value = currentFileId;
+            
+            // Reset all section toggles to unchecked
+            document.getElementById('includeIncomeExpense').checked = false;
+            document.getElementById('includeAttendance').checked = false;
+            document.getElementById('includeFirstTime').checked = false;
+            document.getElementById('includeFeedback').checked = false;
+            
+            // Hide all sections
+            document.getElementById('incomeExpenseSection').classList.remove('show');
+            document.getElementById('attendanceSection').classList.remove('show');
+            document.getElementById('firstTimeSection').classList.remove('show');
+            document.getElementById('feedbackSection').classList.remove('show');
+            
+            // Reset calculations
+            updateProfitLoss();
+            updateTotalRatings();
+            calculateAttendanceTotals();
+            
+            // Reset year inputs to default values
+            document.getElementById('yaStartYear').value = '2014';
+            document.getElementById('yaEndYear').value = '2024';
+            document.getElementById('alumniCutoffYear').value = '2013';
+            updateYALabel();
+            
+            // Close the file details modal first
+            fileDetailsModal.hide();
+            
+            // Show the add event modal after a short delay to ensure smooth transition
+            setTimeout(() => {
+            eventModal.show();
+            }, 300);
+        }
+
+        function editEvent(eventId) {
+            isEditMode = true;
+            const event = currentFileData.events.find(e => e.id === eventId);
+            
+            if (event) {
+                document.getElementById('eventModalTitle').textContent = 'Edit Event';
+                document.getElementById('eventId').value = event.id;
+                document.getElementById('fileId').value = currentFileId;
+                document.getElementById('eventDate').value = event.date;
+                document.getElementById('eventName').value = event.name;
+                document.getElementById('eventIncome').value = event.income;
+                document.getElementById('eventExpenses').value = event.expenses;
+                document.getElementById('eventUnderwritten').value = event.underwritten;
+                updateProfitLoss();
+                eventModal.show();
+            }
+        }
+
+        function updateProfitLoss() {
+            const income = parseFloat(document.getElementById('eventIncome').value) || 0;
+            const expenses = parseFloat(document.getElementById('eventExpenses').value) || 0;
+            const underwritten = parseFloat(document.getElementById('eventUnderwritten').value) || 0;
+            const profitLoss = income - expenses + underwritten;
+            
+            document.getElementById('profitLossPreview').textContent = `$${profitLoss.toFixed(2)}`;
+            document.getElementById('profitLossPreview').className = profitLoss >= 0 ? 'text-success' : 'text-danger';
+        }
+
+        // Toggle section visibility
+        function toggleSection(sectionId, isChecked) {
+            const section = document.getElementById(sectionId);
+            if (isChecked) {
+                section.classList.add('show');
+            } else {
+                section.classList.remove('show');
+            }
+        }
+
+        // Update total ratings calculation
+        function updateTotalRatings() {
+            const rating5 = parseInt(document.getElementById('rating5Stars').value) || 0;
+            const rating4 = parseInt(document.getElementById('rating4Stars').value) || 0;
+            const rating3 = parseInt(document.getElementById('rating3Stars').value) || 0;
+            const rating2 = parseInt(document.getElementById('rating2Stars').value) || 0;
+            const rating1 = parseInt(document.getElementById('rating1Star').value) || 0;
+            
+            const total = rating5 + rating4 + rating3 + rating2 + rating1;
+            document.getElementById('totalRatings').textContent = total;
+        }
+
+        // Update Young Alumni labels based on selected years
+        function updateYALabel() {
+            const startYear = document.getElementById('yaStartYear').value;
+            const endYear = document.getElementById('yaEndYear').value;
+            const cutoffYear = document.getElementById('alumniCutoffYear').value;
+            
+            document.getElementById('yaRegisteredLabel').textContent = `Young Alumni Registered (${startYear}–${endYear})`;
+            document.getElementById('alumniRegisteredLabel').textContent = `Alumni Registered: up to ${cutoffYear}`;
+        }
+
+        // Calculate attendance totals and percentages automatically
+        function calculateAttendanceTotals() {
+            const yaRegistered = parseInt(document.getElementById('yaRegistered').value) || 0;
+            const alumniRegistered = parseInt(document.getElementById('alumniRegistered').value) || 0;
+            const students = parseInt(document.getElementById('studentsAttended').value) || 0;
+            const friendsFamily = parseInt(document.getElementById('friendsFamilyAttended').value) || 0;
+            const staffFaculty = parseInt(document.getElementById('staffFacultyAttended').value) || 0;
+            
+            // Calculate total alumni/guests
+            const totalAlumniGuests = yaRegistered + alumniRegistered + students + friendsFamily + staffFaculty;
+            document.getElementById('totalAlumniGuests').value = totalAlumniGuests;
+            
+            // Calculate percentages
+            const totalAlumni = yaRegistered + alumniRegistered;
+            if (totalAlumni > 0) {
+                const percentYA = ((yaRegistered / totalAlumni) * 100).toFixed(1);
+                const percentNonYA = ((alumniRegistered / totalAlumni) * 100).toFixed(1);
+                
+                document.getElementById('percentYAAttendees').value = percentYA;
+                document.getElementById('percentNonYAAttendees').value = percentNonYA;
+            } else {
+                document.getElementById('percentYAAttendees').value = 0;
+                document.getElementById('percentNonYAAttendees').value = 0;
+            }
+        }
+
+        // Collect all form data into a structured object
+        function collectEventData() {
+            const eventData = {
+                // Basic Information (always required)
+                basic: {
+                    date: document.getElementById('eventDate').value,
+                    name: document.getElementById('eventName').value,
+                    location: document.getElementById('eventLocation').value,
+                    description: document.getElementById('eventDescription').value
+                }
+            };
+
+            // Income/Expense Snapshot
+            if (document.getElementById('includeIncomeExpense').checked) {
+                eventData.incomeExpense = {
+                    income: parseFloat(document.getElementById('eventIncome').value) || 0,
+                    expenses: parseFloat(document.getElementById('eventExpenses').value) || 0,
+                    underwritten: parseFloat(document.getElementById('eventUnderwritten').value) || 0,
+                    profitLoss: (parseFloat(document.getElementById('eventIncome').value) || 0) - 
+                               (parseFloat(document.getElementById('eventExpenses').value) || 0) + 
+                               (parseFloat(document.getElementById('eventUnderwritten').value) || 0)
+                };
+            }
+
+            // Attendance
+            if (document.getElementById('includeAttendance').checked) {
+                eventData.attendance = {
+                    yearRanges: {
+                        yaStartYear: document.getElementById('yaStartYear').value,
+                        yaEndYear: document.getElementById('yaEndYear').value,
+                        alumniCutoffYear: document.getElementById('alumniCutoffYear').value
+                    },
+                    alumni: {
+                        yaRegistered: parseInt(document.getElementById('yaRegistered').value) || 0,
+                        alumniRegistered: parseInt(document.getElementById('alumniRegistered').value) || 0,
+                        totalAlumniAttended: parseInt(document.getElementById('totalAlumniAttended').value) || 0
+                    },
+                    other: {
+                        students: parseInt(document.getElementById('studentsAttended').value) || 0,
+                        friendsFamily: parseInt(document.getElementById('friendsFamilyAttended').value) || 0,
+                        staffFaculty: parseInt(document.getElementById('staffFacultyAttended').value) || 0
+                    },
+                    totals: {
+                        totalAlumniGuests: parseInt(document.getElementById('totalAlumniGuests').value) || 0,
+                        percentYAAttendees: parseFloat(document.getElementById('percentYAAttendees').value) || 0,
+                        percentNonYAAttendees: parseFloat(document.getElementById('percentNonYAAttendees').value) || 0
+                    }
+                };
+            }
+
+            // 1st Time Event Attendees
+            if (document.getElementById('includeFirstTime').checked) {
+                eventData.firstTimeAttendees = {
+                    alumni: parseInt(document.getElementById('firstTimeAlumni').value) || 0,
+                    parents: parseInt(document.getElementById('firstTimeParents').value) || 0,
+                    friends: parseInt(document.getElementById('firstTimeFriends').value) || 0
+                };
+            }
+
+
+
+            // Almabase Feedback Rating
+            if (document.getElementById('includeFeedback').checked) {
+                eventData.feedback = {
+                    rating5: parseInt(document.getElementById('rating5Stars').value) || 0,
+                    rating4: parseInt(document.getElementById('rating4Stars').value) || 0,
+                    rating3: parseInt(document.getElementById('rating3Stars').value) || 0,
+                    rating2: parseInt(document.getElementById('rating2Stars').value) || 0,
+                    rating1: parseInt(document.getElementById('rating1Star').value) || 0,
+                    total: (parseInt(document.getElementById('rating5Stars').value) || 0) +
+                           (parseInt(document.getElementById('rating4Stars').value) || 0) +
+                           (parseInt(document.getElementById('rating3Stars').value) || 0) +
+                           (parseInt(document.getElementById('rating2Stars').value) || 0) +
+                           (parseInt(document.getElementById('rating1Star').value) || 0)
+                };
+            }
+
+            return eventData;
+        }
+
+        function handleSaveEvent() {
+            // Validate required basic fields
+            const basicData = {
+                date: document.getElementById('eventDate').value,
+                name: document.getElementById('eventName').value,
+                location: document.getElementById('eventLocation').value,
+                description: document.getElementById('eventDescription').value
+            };
+
+            if (!basicData.date || !basicData.name || !basicData.location || !basicData.description) {
+                showAlert('Please fill in all required basic information fields', 'danger');
+                return;
+            }
+
+            // Collect all event data using the new structured approach
+            const eventData = collectEventData();
+
+            const eventId = document.getElementById('eventId').value;
+            const fileId = document.getElementById('fileId').value;
+            const method = isEditMode ? 'PUT' : 'POST';
+            const url = isEditMode ? `/api/files/${fileId}/events/${eventId}` : `/api/files/${fileId}/events`;
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(eventData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    eventModal.hide();
+                    
+                    // Reopen the file details modal to show the updated data
+                    setTimeout(() => {
+                    openFile(fileId); // Refresh the file view
+                    }, 300);
+                } else {
+                    showAlert('Error saving event: ' + data.error, 'danger');
+                }
+            })
+            .catch(error => {
+                showAlert('Error saving event: ' + error.message, 'danger');
+            });
+        }
+
+        function deleteEvent(eventId) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                fetch(`/api/files/${currentFileId}/events/${eventId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showAlert(data.message, 'success');
+                        openFile(currentFileId); // Refresh the file view
+                    } else {
+                        showAlert('Error deleting event: ' + data.error, 'danger');
+                    }
+                })
+                .catch(error => {
+                    showAlert('Error deleting event: ' + error.message, 'danger');
+                });
+            }
+        }
+
+        function deleteFile(fileId) {
+            if (confirm('Are you sure you want to delete this file and all its events?')) {
+                fetch(`/api/files/${fileId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showAlert(data.message, 'success');
+                        if (fileDetailsModal.isVisible()) {
+                            fileDetailsModal.hide();
+                        }
+                        loadFiles();
+                    } else {
+                        showAlert('Error deleting file: ' + data.error, 'danger');
+                    }
+                })
+                .catch(error => {
+                    showAlert('Error deleting file: ' + error.message, 'danger');
+                });
+            }
+        }
+
+        function exportFile() {
+            if (currentFileId) {
+                window.open(`/api/files/${currentFileId}/export`, '_blank');
+            }
+        }
+
+        function visualizeFile() {
+            if (currentFileId) {
+                // Open visualization in new tab
+                window.open(`/visualize-managed-data/${currentFileId}`, '_blank');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.querySelector('.content-section').insertBefore(alertDiv, document.querySelector('.tab-content'));
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

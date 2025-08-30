@@ -1,0 +1,30 @@
+DATA SUMMARY REPORT
+==================================================
+
+File: sample_sales_data.xlsx
+Shape: (100, 8)
+
+COLUMNS:
+--------------------
+Date: datetime64[ns]
+Sales: float64
+Profit: float64
+Customers: int64
+Region: object
+Product_Category: object
+Rating: float64
+Units_Sold: int64
+
+Missing values:
+Date                0
+Sales               0
+Profit              0
+Customers           0
+Region              0
+Product_Category    0
+Rating              0
+Units_Sold          0
+dtype: int64
+
+Numeric columns: ['Sales', 'Profit', 'Customers', 'Rating', 'Units_Sold']
+Categorical columns: ['Region', 'Product_Category']

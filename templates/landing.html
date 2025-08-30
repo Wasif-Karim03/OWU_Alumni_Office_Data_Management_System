@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ohio Wesleyan University - Alumni Office Data Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Circe+Slab:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --owu-white: #ffffff;
+            --owu-black: #1a1a1a;
+            --owu-red: #d32f2f;
+            --owu-dark-gray: #2c2c2c;
+            --owu-light-gray: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Circe Slab', 'Georgia', serif;
+            background: linear-gradient(135deg, var(--owu-white) 0%, var(--owu-light-gray) 100%);
+            min-height: 100vh;
+        }
+
+        .landing-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: #a41d33;
+            color: var(--owu-white);
+            padding: 1rem 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: none;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .university-logo {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: var(--owu-white);
+            font-family: 'Circe Slab', 'Georgia', serif;
+            line-height: 1.3;
+            text-align: left;
+        }
+
+        .vertical-divider {
+            width: 1px;
+            height: 40px;
+            background: var(--owu-white);
+            opacity: 0.7;
+        }
+
+        .platform-title {
+            color: var(--owu-white);
+            font-family: 'Circe Slab', 'Georgia', serif;
+            text-align: center;
+        }
+
+        .platform-title .main-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            margin-bottom: 0.3rem;
+        }
+
+        .platform-title .subtitle {
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            line-height: 1.3;
+            opacity: 0.95;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--owu-black);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-description {
+            font-size: 1.4rem;
+            color: var(--owu-dark-gray);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-custom {
+            background: var(--owu-red);
+            border: none;
+            color: var(--owu-white);
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-custom:hover {
+            background: #b71c1c;
+            color: var(--owu-white);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 3px solid var(--owu-black);
+            color: var(--owu-black);
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary-custom:hover {
+            background: var(--owu-black);
+            color: var(--owu-white);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 26, 26, 0.3);
+        }
+
+        /* Creators Section */
+        .creators-section {
+            background: var(--owu-white);
+            padding: 2rem 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .creators-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .creator-info {
+            color: var(--owu-black);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            font-family: 'Circe Slab', 'Georgia', serif;
+        }
+
+        .creator-info strong {
+            color: var(--owu-red);
+        }
+
+        .contact-link {
+            color: var(--owu-red);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .contact-link:hover {
+            color: var(--owu-black);
+        }
+
+
+
+        /* Footer */
+        .footer {
+            background: var(--owu-black);
+            color: var(--owu-white);
+            padding: 0;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1rem 2rem;
+        }
+
+        .footer-left .university-name {
+            font-family: 'Circe Slab', 'Georgia', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-align: left;
+        }
+
+
+
+        .footer-divider {
+            height: 2px;
+            background: var(--owu-red);
+            margin: 0 2rem;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1rem 2rem 2rem 2rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+            text-align: left;
+            align-items: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: 'Circe Slab', 'Georgia', serif;
+            font-size: 0.9rem;
+            justify-content: flex-start;
+        }
+
+        .contact-item i {
+            color: var(--owu-white);
+            width: 16px;
+            text-align: center;
+        }
+
+        .social-media {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .social-icon {
+            color: var(--owu-white);
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-icon:hover {
+            opacity: 0.8;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #333;
+            margin-top: 1rem;
+        }
+
+        .copyright p {
+            font-family: 'Circe Slab', 'Georgia', serif;
+            font-size: 0.9rem;
+            color: #888;
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .header-left {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-description {
+                font-size: 1.2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary-custom,
+            .btn-secondary-custom {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .footer-top,
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+
+            .social-media {
+                justify-content: center;
+            }
+
+            .creators-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .creator-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="university-logo">
+                    OHIO<br>
+                    WESLEYAN<br>
+                    UNIVERSITY
+                </div>
+                <div class="vertical-divider"></div>
+            </div>
+            <div class="header-center">
+                <div class="platform-title">
+                    <div class="main-title">Alumni Office</div>
+                    <div class="subtitle">Event Performance Data Management</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h2 class="hero-title">Transform Your Event Data Into Actionable Insights</h2>
+                <p class="hero-description">
+                    Streamline your OWU alumni event management with our comprehensive data visualization and analytics platform. 
+                    Track financial performance, analyze trends, and make data-driven decisions for your events.
+                </p>
+                <div class="cta-buttons">
+                    <a href="/signin" class="btn-primary-custom">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </a>
+                    <a href="/demo" class="btn-secondary-custom">
+                        <i class="fas fa-play"></i>
+                        Try Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Creator Section -->
+        <div class="creators-section">
+            <div class="creators-container">
+                <p class="creator-info">
+                    Platform Creator: <strong>Wasif Karim</strong> - Physics and Computer Science Major, Class of 2026 | 
+                    <a href="mailto:mwkarim@owu.edu" class="contact-link">mwkarim@owu.edu</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <!-- Top Section -->
+            <div class="footer-top">
+                <div class="footer-left">
+                    <div class="university-name">Ohio Wesleyan University</div>
+                </div>
+                
+            </div>
+            
+            <!-- Red Divider -->
+            <div class="footer-divider"></div>
+            
+            <!-- Bottom Section -->
+            <div class="footer-bottom">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>61 S. Sandusky St. Delaware, OH 43015</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>800-922-8953</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-fax"></i>
+                        <span>740-368-3314</span>
+                    </div>
+                </div>
+                <div class="social-media">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <!-- Copyright Section -->
+            <div class="copyright">
+                <p>&copy; 2025 Ohio Wesleyan University. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
