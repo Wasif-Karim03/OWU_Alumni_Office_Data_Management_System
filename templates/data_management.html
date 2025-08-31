@@ -1136,6 +1136,7 @@
                                     <th>Expenses</th>
                                     <th>Underwritten</th>
                                     <th>Profit/Loss</th>
+                                    <th>Details</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -1325,7 +1326,7 @@
             if (fileData.events.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
+                        <td colspan="8" class="text-center text-muted py-4">
                             <i class="fas fa-calendar-plus fa-2x mb-3"></i>
                             <h6>No events yet</h6>
                             <p>Click "Add New Event" to get started!</p>
@@ -1333,15 +1334,32 @@
                     </tr>
                 `;
             } else {
-                tbody.innerHTML = fileData.events.map(event => `
-                    <tr>
-                        <td>${event.date}</td>
-                        <td>${event.name}</td>
-                        <td>$${event.income.toFixed(2)}</td>
-                        <td>$${event.expenses.toFixed(2)}</td>
-                        <td>$${event.underwritten.toFixed(2)}</td>
-                        <td class="${event.profit_loss >= 0 ? 'text-success' : 'text-danger'}">
-                            $${event.profit_loss.toFixed(2)}
+                tbody.innerHTML = fileData.events.map(event => {
+                    // Get attendance data if available
+                    const attendance = event.attendance || {};
+                    const totals = attendance.totals || {};
+                    const totalAttendees = totals.totalAlumniGuests || 0;
+                    
+                    // Get feedback data if available
+                    const feedback = event.feedback || {};
+                    const totalRatings = feedback.total || 0;
+                    
+                    return `
+                        <tr>
+                            <td>${event.date || ''}</td>
+                            <td>
+                                <strong>${event.name || ''}</strong>
+                                ${event.location ? `<br><small class="text-muted">📍 ${event.location}</small>` : ''}
+                            </td>
+                            <td>$${(event.income || 0).toFixed(2)}</td>
+                            <td>$${(event.expenses || 0).toFixed(2)}</td>
+                            <td>$${(event.underwritten || 0).toFixed(2)}</td>
+                            <td class="${(event.profit_loss || 0) >= 0 ? 'text-success' : 'text-danger'}">
+                                $${(event.profit_loss || 0).toFixed(2)}
+                            </td>
+                            <td>
+                                ${totalAttendees > 0 ? `<span class="badge bg-info">${totalAttendees} attendees</span>` : ''}
+                                ${totalRatings > 0 ? `<br><span class="badge bg-warning">${totalRatings} ratings</span>` : ''}
                         </td>
                         <td>
                             <button class="btn btn-sm btn-primary" onclick="editEvent('${event.id}')">
@@ -1352,7 +1370,8 @@
                             </button>
                         </td>
                     </tr>
-                `).join('');
+                    `;
+                }).join('');
             }
         }
 
@@ -1403,12 +1422,77 @@
                 document.getElementById('eventModalTitle').textContent = 'Edit Event';
                 document.getElementById('eventId').value = event.id;
                 document.getElementById('fileId').value = currentFileId;
-                document.getElementById('eventDate').value = event.date;
-                document.getElementById('eventName').value = event.name;
-                document.getElementById('eventIncome').value = event.income;
-                document.getElementById('eventExpenses').value = event.expenses;
-                document.getElementById('eventUnderwritten').value = event.underwritten;
+                
+                // Basic information
+                document.getElementById('eventDate').value = event.date || '';
+                document.getElementById('eventName').value = event.name || '';
+                document.getElementById('eventLocation').value = event.location || '';
+                document.getElementById('eventDescription').value = event.description || '';
+                
+                // Income/Expense data
+                if (event.income !== undefined || event.expenses !== undefined || event.underwritten !== undefined) {
+                    document.getElementById('includeIncomeExpense').checked = true;
+                    document.getElementById('incomeExpenseSection').classList.add('show');
+                    document.getElementById('eventIncome').value = event.income || 0;
+                    document.getElementById('eventExpenses').value = event.expenses || 0;
+                    document.getElementById('eventUnderwritten').value = event.underwritten || 0;
+                }
+                
+                // Attendance data
+                if (event.attendance) {
+                    document.getElementById('includeAttendance').checked = true;
+                    document.getElementById('attendanceSection').classList.add('show');
+                    
+                    const attendance = event.attendance;
+                    if (attendance.yearRanges) {
+                        document.getElementById('yaStartYear').value = attendance.yearRanges.yaStartYear || '2014';
+                        document.getElementById('yaEndYear').value = attendance.yearRanges.yaEndYear || '2024';
+                        document.getElementById('alumniCutoffYear').value = attendance.yearRanges.alumniCutoffYear || '2013';
+                    }
+                    
+                    if (attendance.alumni) {
+                        document.getElementById('yaRegistered').value = attendance.alumni.yaRegistered || 0;
+                        document.getElementById('alumniRegistered').value = attendance.alumni.alumniRegistered || 0;
+                        document.getElementById('totalAlumniAttended').value = attendance.alumni.totalAlumniAttended || 0;
+                    }
+                    
+                    if (attendance.other) {
+                        document.getElementById('studentsAttended').value = attendance.other.students || 0;
+                        document.getElementById('friendsFamilyAttended').value = attendance.other.friendsFamily || 0;
+                        document.getElementById('staffFacultyAttended').value = attendance.other.staffFaculty || 0;
+                    }
+                    
+                    if (attendance.totals) {
+                        document.getElementById('totalAlumniGuests').value = attendance.totals.totalAlumniGuests || 0;
+                        document.getElementById('percentYAAttendees').value = attendance.totals.percentYAAttendees || 0;
+                        document.getElementById('percentNonYAAttendees').value = attendance.totals.percentNonYAAttendees || 0;
+                    }
+                }
+                
+                // First time attendees data
+                if (event.first_time_attendees) {
+                    document.getElementById('includeFirstTime').checked = true;
+                    document.getElementById('firstTimeSection').classList.add('show');
+                    document.getElementById('firstTimeAlumni').value = event.first_time_attendees.alumni || 0;
+                    document.getElementById('firstTimeParents').value = event.first_time_attendees.parents || 0;
+                    document.getElementById('firstTimeFriends').value = event.first_time_attendees.friends || 0;
+                }
+                
+                // Feedback data
+                if (event.feedback) {
+                    document.getElementById('includeFeedback').checked = true;
+                    document.getElementById('feedbackSection').classList.add('show');
+                    document.getElementById('rating5Stars').value = event.feedback.rating5 || 0;
+                    document.getElementById('rating4Stars').value = event.feedback.rating4 || 0;
+                    document.getElementById('rating3Stars').value = event.feedback.rating3 || 0;
+                    document.getElementById('rating2Stars').value = event.feedback.rating2 || 0;
+                    document.getElementById('rating1Star').value = event.feedback.rating1 || 0;
+                }
+                
                 updateProfitLoss();
+                updateTotalRatings();
+                calculateAttendanceTotals();
+                updateYALabel();
                 eventModal.show();
             }
         }

@@ -463,6 +463,165 @@
             box-shadow: 0 8px 25px rgba(196, 30, 58, 0.15);
         }
 
+        /* Data Type Selection Cards */
+        .data-type-card {
+            background: var(--owu-white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 2px solid var(--owu-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .data-type-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(196, 30, 58, 0.15);
+            border-color: var(--owu-red);
+        }
+
+        .data-type-card.selected {
+            background: var(--owu-gradient);
+            color: var(--owu-white);
+            border-color: var(--owu-red);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(196, 30, 58, 0.2);
+        }
+
+        .data-type-card.selected .text-muted {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .data-type-icon {
+            font-size: 2.5rem;
+            color: var(--owu-red);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .data-type-card.selected .data-type-icon {
+            color: var(--owu-white);
+            transform: scale(1.1);
+        }
+
+        .data-type-card h6 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--owu-dark-gray);
+        }
+
+        .data-type-card.selected h6 {
+            color: var(--owu-white);
+        }
+
+        /* Financial Summary Cards */
+        .financial-summary-card {
+            background: var(--owu-white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 2px solid var(--owu-border);
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .financial-summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--owu-gradient);
+        }
+
+        .financial-summary-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(196, 30, 58, 0.15);
+        }
+
+        .financial-summary-card.income {
+            border-left: 4px solid #28a745;
+        }
+
+        .financial-summary-card.expenses {
+            border-left: 4px solid #dc3545;
+        }
+
+        .financial-summary-card.net-result {
+            border-left: 4px solid #ffc107;
+        }
+
+        .financial-summary-card.success-rate {
+            border-left: 4px solid #6c757d;
+        }
+
+        .financial-summary-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .financial-summary-card:hover .financial-summary-icon {
+            transform: scale(1.1);
+        }
+
+        .financial-summary-card.income .financial-summary-icon {
+            color: #28a745;
+        }
+
+        .financial-summary-card.expenses .financial-summary-icon {
+            color: #dc3545;
+        }
+
+        .financial-summary-card.net-result .financial-summary-icon {
+            color: #ffc107;
+        }
+
+        .financial-summary-card.success-rate .financial-summary-icon {
+            color: #6c757d;
+        }
+
+        .financial-summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--owu-dark-gray);
+        }
+
+        .financial-summary-card.income .financial-summary-value {
+            color: #28a745;
+        }
+
+        .financial-summary-card.expenses .financial-summary-value {
+            color: #dc3545;
+        }
+
+        .financial-summary-card.net-result .financial-summary-value {
+            color: #ffc107;
+        }
+
+        .financial-summary-card.success-rate .financial-summary-value {
+            color: #6c757d;
+        }
+
+        .financial-summary-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--owu-dark-gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .financial-summary-detail {
+            font-size: 0.8rem;
+            color: var(--owu-light-gray);
+        }
+
         .stat-number {
             font-size: 2.2rem;
             font-weight: 800;
@@ -539,101 +698,80 @@
                     </div>
                 </div>
 
-                <!-- Financial Summary Chart -->
+                <!-- Financial Summary Cards -->
                 <div class="data-card">
-                    <h4 class="chart-title">
-                        <i class="fas fa-chart-bar"></i> Financial Summary by Event
+                    <h4 class="chart-title mb-4">
+                        <i class="fas fa-chart-line"></i> Financial Summary by Event
                     </h4>
-                    <p class="text-muted mb-3">Income, Expenses, and Profit/Loss for each event</p>
+                    <p class="text-muted mb-4">Income, Expenses, and Profit/Loss for each event</p>
                     
-                    <!-- Financial Summary Stats -->
-                    <div class="row mb-5" id="financialSummaryStats" style="margin-top: 1.5rem;">
-                        <!-- Summary stats will be populated here -->
+                    <div class="row" id="financialSummaryCards">
+                        <!-- Financial summary cards will be populated here -->
                     </div>
-                    
-                    <div id="financialChart" style="height: 700px;"></div>
                 </div>
 
-                <!-- Advanced Analytics Section -->
+                <!-- Data Type Visualization Selector -->
                 <div class="data-card">
-                    <h4 class="chart-title">
-                        <i class="fas fa-analytics"></i> Advanced Financial Analytics
+                    <h4 class="chart-title mb-4">
+                        <i class="fas fa-chart-pie"></i> Select Data Type to Visualize
                     </h4>
-                    <p class="text-muted mb-3">Comprehensive analysis with trends, ratios, and performance metrics</p>
+                    <p class="text-muted mb-4">Choose a specific data category to view detailed analytics and charts</p>
                     
-                    <!-- Chart Tabs -->
-                    <ul class="nav nav-tabs mb-4" id="analyticsTabs" role="tablist" style="border-bottom: 2px solid #e5e7eb; background: #f8fafc; border-radius: 12px; padding: 8px;">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="trends-tab" data-bs-toggle="tab" data-bs-target="#trends" type="button" role="tab" style="border: none; border-radius: 8px; margin: 0 4px; padding: 12px 20px; font-weight: 600; color: #374151; background: transparent; transition: all 0.3s ease;">
-                                <i class="fas fa-chart-line" style="margin-right: 8px; color: #059669;"></i> Trend Analysis
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="ratios-tab" data-bs-toggle="tab" data-bs-target="#ratios" type="button" role="tab" style="border: none; border-radius: 8px; margin: 0 4px; padding: 12px 20px; font-weight: 600; color: #374151; background: transparent; transition: all 0.3s ease;">
-                                <i class="fas fa-percentage" style="margin-right: 8px; color: #d97706;"></i> Financial Ratios
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="correlation-tab" data-bs-toggle="tab" data-bs-target="#correlation" type="button" role="tab" style="border: none; border-radius: 8px; margin: 0 4px; padding: 12px 20px; font-weight: 600; color: #374151; background: transparent; transition: all 0.3s ease;">
-                                <i class="fas fa-project-diagram" style="margin-right: 8px; color: #dc2626;"></i> Correlation Matrix
-                            </button>
-                        </li>
-                    </ul>
-
-                    <!-- Tab Content -->
-                    <div class="tab-content" id="analyticsTabsContent">
-                        <!-- Trend Analysis -->
-                        <div class="tab-pane fade show active" id="trends" role="tabpanel">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div id="trendChart" style="height: 400px;"></div>
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="data-type-card" onclick="selectDataType('incomeExpense')" id="incomeExpenseCard">
+                                <div class="data-type-icon">
+                                    <i class="fas fa-dollar-sign"></i>
                                 </div>
-                                <div class="col-md-6">
-                                    <div id="performanceChart" style="height: 400px;"></div>
-                                </div>
+                                <h6>Income / Expense Snapshot</h6>
+                                <p class="text-muted small">Financial performance analysis</p>
                             </div>
                         </div>
-                        
-                        <!-- Financial Ratios -->
-                        <div class="tab-pane fade" id="ratios" role="tabpanel">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div id="ratiosChart" style="height: 400px;"></div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="data-type-card" onclick="selectDataType('attendance')" id="attendanceCard">
+                                <div class="data-type-icon">
+                                    <i class="fas fa-users"></i>
                                 </div>
-                                <div class="col-md-6">
-                                    <div id="efficiencyChart" style="height: 400px;"></div>
-                                </div>
+                                <h6>Attendance</h6>
+                                <p class="text-muted small">Event participation analytics</p>
                             </div>
                         </div>
-                        
-                        <!-- Correlation Matrix -->
-                        <div class="tab-pane fade" id="correlation" role="tabpanel">
-                            <div id="correlationChart" style="height: 500px;"></div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="data-type-card" onclick="selectDataType('firstTime')" id="firstTimeCard">
+                                <div class="data-type-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h6>1st Time Event Attendees</h6>
+                                <p class="text-muted small">New attendee insights</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="data-type-card" onclick="selectDataType('feedback')" id="feedbackCard">
+                                <div class="data-type-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h6>Almabase Feedback Rating</h6>
+                                <p class="text-muted small">Event satisfaction analysis</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Statistical Analysis Section -->
-                <div class="data-card">
-                    <h4 class="chart-title">
-                        <i class="fas fa-calculator"></i> Statistical Analysis & Insights
+                <!-- Selected Data Type Charts -->
+                <div class="data-card" id="selectedDataTypeCharts" style="display: none;">
+                    <h4 class="chart-title" id="selectedDataTypeTitle">
+                        <i class="fas fa-chart-bar"></i> Data Type Analysis
                     </h4>
-                    <p class="text-muted mb-3">Advanced statistical metrics and data insights</p>
+                    <p class="text-muted mb-3" id="selectedDataTypeDescription">Select a data type above to view detailed analytics</p>
                     
-                    <div class="row" style="margin-top: 2rem;">
-                        <div class="col-md-6">
-                            <div id="distributionChart" style="height: 400px;"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div id="boxPlotChart" style="height: 400px;"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Statistical Summary -->
-                    <div class="row mt-5" id="statisticalSummary" style="margin-top: 3rem !important;">
-                        <!-- Statistical metrics will be populated here -->
+                    <div id="selectedDataTypeContent">
+                        <!-- Charts will be populated here based on selection -->
                     </div>
                 </div>
+
+
+
+
             </div>
 
             <!-- Error Section -->
@@ -663,6 +801,7 @@
         // Global variables
         let currentFileId = null;
         let currentAnalysis = null;
+        let selectedDataType = null;
 
         // Ensure back button works properly
         document.addEventListener('DOMContentLoaded', function() {
@@ -710,11 +849,36 @@
                         // Update page title
                         fileTitle.textContent = data.file_name;
                         
-                        // Display data
+                        // Display data with comprehensive error handling
+                        try {
                         displayDataOverview(data.analysis);
+                        } catch (error) {
+                            console.error('Error displaying data overview:', error);
+                        }
+                        
+                        try {
                         displayDataTable(data.data);
+                        } catch (error) {
+                            console.error('Error displaying data table:', error);
+                        }
+                        
+                        try {
+                            displayFinancialSummaryCards(data.data);
+                        } catch (error) {
+                            console.error('Error displaying financial summary cards:', error);
+                        }
+                        
+                        try {
                         displayFinancialSummaryStats(data.data);
+                        } catch (error) {
+                            console.error('Error displaying financial summary stats:', error);
+                        }
+                        
+                        try {
                         displayCharts(data.charts);
+                        } catch (error) {
+                            console.error('Error displaying charts:', error);
+                        }
                         
                         // Show analysis section
                         loadingSection.style.display = 'none';
@@ -755,7 +919,9 @@
                 }
             ];
 
-            statsGrid.innerHTML = stats.map(stat => `
+            const statsGridElement = document.getElementById('statsGrid');
+            if (statsGridElement) {
+                statsGridElement.innerHTML = stats.map(stat => `
                 <div class="stat-card">
                     <div class="stat-number">
                         <i class="${stat.icon}"></i>
@@ -764,23 +930,192 @@
                     <div class="stat-label">${stat.label}</div>
                 </div>
             `).join('');
+            } else {
+                console.warn('Stats grid element not found');
+            }
         }
 
-        function displayDataTable(data) {
-            if (data.length === 0) {
-                dataTable.innerHTML = '<tr><td colspan="6" class="text-center">No data available</td></tr>';
+        function displayFinancialSummaryCards(data) {
+            console.log('displayFinancialSummaryCards called with data:', data);
+            
+            const container = document.getElementById('financialSummaryCards');
+            console.log('Container found:', container);
+            
+            if (!container) {
+                console.warn('Financial summary cards container not found');
+                return;
+            }
+            
+            if (!data || data.length === 0) {
+                console.log('No data available, showing empty state');
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-info text-center">
+                            <h5><i class="fas fa-info-circle"></i> No Financial Data Available</h5>
+                            <p>Add events with financial data to see summary statistics.</p>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
-            // Define the column order we want
-            const columnOrder = [
-                'Event Name',
+            // Calculate financial metrics with error handling
+            let totalIncome = 0;
+            let totalExpenses = 0;
+            let netResult = 0;
+            let profitableEvents = 0;
+            let totalEvents = 0;
+            let successRate = 0;
+            
+            try {
+                totalIncome = data.reduce((sum, row) => {
+                    const income = parseFloat(row['Event Income']) || 0;
+                    return sum + income;
+                }, 0);
+                
+                totalExpenses = data.reduce((sum, row) => {
+                    const expenses = parseFloat(row['All Incurred Expenses']) || 0;
+                    return sum + expenses;
+                }, 0);
+                
+                netResult = totalIncome - totalExpenses;
+                
+                // Calculate success rate (profitable events / total events)
+                profitableEvents = data.filter(row => {
+                    const profitLoss = parseFloat(row['Profit/Loss']) || 0;
+                    return profitLoss > 0;
+                }).length;
+                
+                totalEvents = data.length;
+                successRate = totalEvents > 0 ? Math.round((profitableEvents / totalEvents) * 100) : 0;
+                
+                console.log('Financial metrics calculated:', {
+                    totalIncome, totalExpenses, netResult, profitableEvents, totalEvents, successRate
+                });
+            } catch (error) {
+                console.error('Error calculating financial metrics:', error);
+                return;
+            }
+
+            // Format currency values
+            const formatCurrency = (value) => {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(value);
+            };
+
+            try {
+                console.log('Generating HTML for financial summary cards');
+                container.innerHTML = `
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="financial-summary-card income">
+                            <div class="financial-summary-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="financial-summary-value">${formatCurrency(totalIncome)}</div>
+                            <div class="financial-summary-label">Total Income</div>
+                            <div class="financial-summary-detail">Across all events</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="financial-summary-card expenses">
+                            <div class="financial-summary-icon">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="financial-summary-value">${formatCurrency(totalExpenses)}</div>
+                            <div class="financial-summary-label">Total Expenses</div>
+                            <div class="financial-summary-detail">All incurred costs</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="financial-summary-card net-result">
+                            <div class="financial-summary-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="financial-summary-value">${formatCurrency(netResult)}</div>
+                            <div class="financial-summary-label">Net Result</div>
+                            <div class="financial-summary-detail">${netResult >= 0 ? 'Profit' : 'Loss'}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="financial-summary-card success-rate">
+                            <div class="financial-summary-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="financial-summary-value">${successRate}%</div>
+                            <div class="financial-summary-label">Success Rate</div>
+                            <div class="financial-summary-detail">${profitableEvents}/${totalEvents} Profitable</div>
+                        </div>
+                    </div>
+                `;
+                console.log('Financial summary cards HTML generated successfully');
+            } catch (error) {
+                console.error('Error generating financial summary cards HTML:', error);
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger text-center">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Error Loading Financial Summary</h5>
+                            <p>There was an error displaying the financial summary cards.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function displayDataTable(data) {
+            const dataTableElement = document.getElementById('dataTable');
+            if (!dataTableElement) {
+                console.warn('Data table element not found');
+                return;
+            }
+            
+            if (data.length === 0) {
+                dataTableElement.innerHTML = '<tr><td colspan="10" class="text-center">No data available</td></tr>';
+                return;
+            }
+
+            // Get all available columns from the data
+            const allColumns = Object.keys(data[0] || {});
+            
+            // Define preferred column order (most important first)
+            const preferredOrder = [
                 'Date', 
-                'All Incurred Expenses',
+                'Event Name',
+                'Location',
+                'Description',
                 'Event Income',
+                'All Incurred Expenses',
                 'Underwritten',
-                'Profit/Loss'
+                'Profit/Loss',
+                'Young Alumni Start Year',
+                'Young Alumni End Year',
+                'Alumni Cutoff Year',
+                'Young Alumni Registered',
+                'Alumni Registered',
+                'Total Alumni Attended',
+                'Students Attended',
+                'Friends/Family Attended',
+                'Staff/Faculty Attended',
+                'Total Alumni/Guests',
+                '% Young Alumni Attendees',
+                '% Non-Young Alumni Attendees',
+                '1st Time Alumni',
+                '1st Time Parents',
+                '1st Time Friends',
+                '5-Star Ratings',
+                '4-Star Ratings',
+                '3-Star Ratings',
+                '2-Star Ratings',
+                '1-Star Ratings',
+                'Total Ratings'
             ];
+
+            // Create final column order (preferred order + any remaining columns)
+            const columnOrder = preferredOrder.filter(col => allColumns.includes(col))
+                .concat(allColumns.filter(col => !preferredOrder.includes(col)));
 
             // Create header row
             const headerRow = columnOrder.map(header => `<th>${header}</th>`).join('');
@@ -789,18 +1124,26 @@
             const dataRows = data.map(row => {
                 return `<tr>${columnOrder.map(header => {
                     let value = row[header];
+                    
+                    // Handle different data types and formatting
                     if (header === 'Profit/Loss') {
                         const color = value >= 0 ? 'text-success' : 'text-danger';
                         return `<td class="${color}">$${value.toFixed(2)}</td>`;
                     } else if (header.includes('Income') || header.includes('Expenses') || header.includes('Underwritten')) {
                         return `<td>$${value.toFixed(2)}</td>`;
+                    } else if (header.includes('%')) {
+                        return `<td>${value}%</td>`;
+                    } else if (header.includes('Ratings') || header.includes('Attended') || header.includes('Registered') || header.includes('Alumni') || header.includes('Parents') || header.includes('Friends')) {
+                        return `<td>${value || 0}</td>`;
+                    } else if (header === 'Description' && value && value.length > 50) {
+                        return `<td title="${value}">${value.substring(0, 50)}...</td>`;
                     } else {
-                        return `<td>${value}</td>`;
+                        return `<td>${value || ''}</td>`;
                     }
                 }).join('')}</tr>`;
             }).join('');
 
-            dataTable.innerHTML = `
+            dataTableElement.innerHTML = `
                 <thead><tr>${headerRow}</tr></thead>
                 <tbody>${dataRows}</tbody>
             `;
@@ -810,12 +1153,7 @@
             // Create the financial summary chart
             createFinancialSummaryChart();
             
-            // Create advanced analytics charts
-            createTrendAnalysisCharts();
-            createFinancialRatiosCharts();
-            createCorrelationMatrix();
-            createStatisticalAnalysisCharts();
-            displayStatisticalSummary();
+
         }
 
         function displayFinancialSummaryStats(data) {
@@ -828,6 +1166,10 @@
             const totalEvents = data.length;
 
             const statsContainer = document.getElementById('financialSummaryStats');
+            if (!statsContainer) {
+                console.warn('Financial summary stats container not found');
+                return;
+            }
             statsContainer.innerHTML = `
                 <div class="col-md-3">
                     <div class="text-center p-3" style="background: #d4edda; border-radius: 8px; border: 2px solid #28a745;">
@@ -862,12 +1204,17 @@
             const data = currentAnalysis.data || [];
             
             if (!data || data.length === 0) {
-                document.getElementById('financialChart').innerHTML = `
+                const financialChartElement = document.getElementById('financialChart');
+                if (financialChartElement) {
+                    financialChartElement.innerHTML = `
                     <div class="alert alert-info text-center">
                         <h5><i class="fas fa-info-circle"></i> No Data Available</h5>
                         <p>Add some events with financial data to see the chart.</p>
                     </div>
                 `;
+                } else {
+                    console.warn('Financial chart element not found');
+                }
                 return;
             }
 
@@ -1042,21 +1389,848 @@
             });
         }
 
+        // Data Type Selection Functions
+        function selectDataType(dataType) {
+            // Remove selected class from all cards
+            document.querySelectorAll('.data-type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            document.getElementById(dataType + 'Card').classList.add('selected');
+            
+            // Set selected data type
+            selectedDataType = dataType;
+            
+            // Show the charts section
+            document.getElementById('selectedDataTypeCharts').style.display = 'block';
+            
+            // Update title and description
+            const titles = {
+                'incomeExpense': 'Income / Expense Snapshot Analysis',
+                'attendance': 'Attendance Analytics',
+                'firstTime': '1st Time Event Attendees Analysis',
+                'feedback': 'Almabase Feedback Rating Analysis'
+            };
+            
+            const descriptions = {
+                'incomeExpense': 'Financial performance metrics and trends across events',
+                'attendance': 'Event participation patterns and demographic breakdowns',
+                'firstTime': 'New attendee acquisition and engagement insights',
+                'feedback': 'Event satisfaction ratings and feedback trends'
+            };
+            
+            document.getElementById('selectedDataTypeTitle').innerHTML = `<i class="fas fa-chart-bar"></i> ${titles[dataType]}`;
+            document.getElementById('selectedDataTypeDescription').textContent = descriptions[dataType];
+            
+            // Create and display charts for selected data type
+            createDataTypeCharts(dataType);
+        }
+
+        function createDataTypeCharts(dataType) {
+            const content = document.getElementById('selectedDataTypeContent');
+            
+            switch(dataType) {
+                case 'incomeExpense':
+                    createIncomeExpenseCharts(content);
+                    break;
+                case 'attendance':
+                    createAttendanceCharts(content);
+                    break;
+                case 'firstTime':
+                    createFirstTimeCharts(content);
+                    break;
+                case 'feedback':
+                    createFeedbackCharts(content);
+                    break;
+            }
+        }
+
+        function createIncomeExpenseCharts(container) {
+            const data = currentAnalysis.data || [];
+            const hasFinancialData = data.some(row => 
+                (row['Event Income'] && row['Event Income'] > 0) || 
+                (row['All Incurred Expenses'] && row['All Incurred Expenses'] > 0)
+            );
+
+            if (!hasFinancialData) {
+                container.innerHTML = `
+                    <div class="alert alert-info text-center">
+                        <h5><i class="fas fa-info-circle"></i> No Financial Data Available</h5>
+                        <p>Add events with income and expense data to see financial analytics.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="incomeExpenseBarChart"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="profitLossTrendChart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <div class="chart-container">
+                            <div id="financialSummaryPieChart"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Create Income vs Expenses Bar Chart
+            const events = data.map(row => row['Event Name'] || 'Unnamed Event');
+            const income = data.map(row => row['Event Income'] || 0);
+            const expenses = data.map(row => row['All Incurred Expenses'] || 0);
+            const underwritten = data.map(row => row['Underwritten'] || 0);
+
+            const barData = [
+                {
+                    x: events,
+                    y: income,
+                    type: 'bar',
+                    name: 'Income',
+                    marker: { color: '#28a745' },
+                    hovertemplate: '<b>%{x}</b><br>💰 Income: $%{y:,.0f}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: expenses,
+                    type: 'bar',
+                    name: 'Expenses',
+                    marker: { color: '#dc3545' },
+                    hovertemplate: '<b>%{x}</b><br>💸 Expenses: $%{y:,.0f}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: underwritten,
+                    type: 'bar',
+                    name: 'Underwritten',
+                    marker: { color: '#17a2b8' },
+                    hovertemplate: '<b>%{x}</b><br>🏦 Underwritten: $%{y:,.0f}<extra></extra>'
+                }
+            ];
+
+            const barLayout = createStandardChartLayout('Income vs Expenses by Event', 'Events', 'Amount ($)');
+            Plotly.newPlot('incomeExpenseBarChart', barData, barLayout, createChartConfig());
+
+            // Create Profit/Loss Trend Chart
+            const profitLoss = data.map(row => row['Profit/Loss'] || 0);
+            const trendData = [{
+                x: events,
+                y: profitLoss,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Profit/Loss',
+                line: { color: profitLoss.some(p => p < 0) ? '#dc3545' : '#28a745', width: 3 },
+                marker: { size: 8 },
+                hovertemplate: '<b>%{x}</b><br>📈 Profit/Loss: $%{y:,.0f}<extra></extra>'
+            }];
+
+            const trendLayout = createStandardChartLayout('Profit/Loss Trend by Event', 'Events', 'Profit/Loss ($)');
+            Plotly.newPlot('profitLossTrendChart', trendData, trendLayout, createChartConfig());
+
+
+
+            // Create Financial Summary Pie Chart
+            const totalIncome = income.reduce((sum, val) => sum + val, 0);
+            const totalExpenses = expenses.reduce((sum, val) => sum + val, 0);
+            const totalUnderwritten = underwritten.reduce((sum, val) => sum + val, 0);
+
+            const pieData = [{
+                labels: ['Total Income', 'Total Expenses', 'Total Underwritten'],
+                values: [totalIncome, totalExpenses, totalUnderwritten],
+                type: 'pie',
+                marker: {
+                    colors: ['#28a745', '#dc3545', '#17a2b8']
+                },
+                hovertemplate: '<b>%{label}</b><br>$%{value:,.0f}<br>%{percent}<extra></extra>'
+            }];
+
+            const pieLayout = createStandardChartLayout('Financial Summary Distribution', '', '');
+            Plotly.newPlot('financialSummaryPieChart', pieData, pieLayout, createChartConfig());
+        }
+
+        function createAttendanceCharts(container) {
+            const data = currentAnalysis.data || [];
+            const hasAttendanceData = data.some(row => 
+                (row['Total Alumni/Guests'] && row['Total Alumni/Guests'] > 0) ||
+                (row['Young Alumni Registered'] && row['Young Alumni Registered'] > 0)
+            );
+
+            if (!hasAttendanceData) {
+                container.innerHTML = `
+                    <div class="alert alert-info text-center">
+                        <h5><i class="fas fa-info-circle"></i> No Attendance Data Available</h5>
+                        <p>Add events with attendance data to see participation analytics.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="attendanceBreakdownChart"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="alumniDemographicsChart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="attendanceTrendChart"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="attendeeTypesChart"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Create Attendance Breakdown Chart
+            const events = data.map(row => row['Event Name'] || 'Unnamed Event');
+            const youngAlumni = data.map(row => row['Young Alumni Registered'] || 0);
+            const alumni = data.map(row => row['Alumni Registered'] || 0);
+            const students = data.map(row => row['Students Attended'] || 0);
+            const friendsFamily = data.map(row => row['Friends/Family Attended'] || 0);
+            const staffFaculty = data.map(row => row['Staff/Faculty Attended'] || 0);
+
+            const attendanceData = [
+                {
+                    x: events,
+                    y: youngAlumni,
+                    type: 'bar',
+                    name: 'Young Alumni',
+                    marker: { color: '#007bff' },
+                    hovertemplate: '<b>%{x}</b><br>👥 Young Alumni: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: alumni,
+                    type: 'bar',
+                    name: 'Alumni',
+                    marker: { color: '#6f42c1' },
+                    hovertemplate: '<b>%{x}</b><br>👥 Alumni: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: students,
+                    type: 'bar',
+                    name: 'Students',
+                    marker: { color: '#28a745' },
+                    hovertemplate: '<b>%{x}</b><br>🎓 Students: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: friendsFamily,
+                    type: 'bar',
+                    name: 'Friends/Family',
+                    marker: { color: '#fd7e14' },
+                    hovertemplate: '<b>%{x}</b><br>👨‍👩‍👧‍👦 Friends/Family: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: staffFaculty,
+                    type: 'bar',
+                    name: 'Staff/Faculty',
+                    marker: { color: '#20c997' },
+                    hovertemplate: '<b>%{x}</b><br>👨‍🏫 Staff/Faculty: %{y}<extra></extra>'
+                }
+            ];
+
+            const attendanceLayout = createStandardChartLayout('Attendance Breakdown by Event', 'Events', 'Number of Attendees');
+            Plotly.newPlot('attendanceBreakdownChart', attendanceData, attendanceLayout, createChartConfig());
+
+            // Create Alumni Demographics Pie Chart
+            const totalYoungAlumni = youngAlumni.reduce((sum, val) => sum + val, 0);
+            const totalAlumni = alumni.reduce((sum, val) => sum + val, 0);
+            const totalStudents = students.reduce((sum, val) => sum + val, 0);
+            const totalFriendsFamily = friendsFamily.reduce((sum, val) => sum + val, 0);
+            const totalStaffFaculty = staffFaculty.reduce((sum, val) => sum + val, 0);
+
+            const demographicsData = [{
+                labels: ['Young Alumni', 'Alumni', 'Students', 'Friends/Family', 'Staff/Faculty'],
+                values: [totalYoungAlumni, totalAlumni, totalStudents, totalFriendsFamily, totalStaffFaculty],
+                type: 'pie',
+                marker: {
+                    colors: ['#007bff', '#6f42c1', '#28a745', '#fd7e14', '#20c997']
+                },
+                hovertemplate: '<b>%{label}</b><br>%{value} attendees<br>%{percent}<extra></extra>'
+            }];
+
+            const demographicsLayout = createStandardChartLayout('Overall Attendee Demographics', '', '');
+            Plotly.newPlot('alumniDemographicsChart', demographicsData, demographicsLayout, createChartConfig());
+
+            // Create Attendance Trend Chart
+            const totalAttendees = data.map(row => row['Total Alumni/Guests'] || 0);
+            const trendData = [{
+                x: events,
+                y: totalAttendees,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Total Attendance',
+                line: { color: '#c41e3a', width: 3 },
+                marker: { size: 8 },
+                hovertemplate: '<b>%{x}</b><br>👥 Total Attendees: %{y}<extra></extra>'
+            }];
+
+            const trendLayout = createStandardChartLayout('Total Attendance Trend', 'Events', 'Total Attendees');
+            Plotly.newPlot('attendanceTrendChart', trendData, trendLayout, createChartConfig());
+
+            // Create Attendee Types Stacked Bar Chart
+            const stackedData = [
+                {
+                    x: events,
+                    y: youngAlumni,
+                    type: 'bar',
+                    name: 'Young Alumni',
+                    marker: { color: '#007bff' }
+                },
+                {
+                    x: events,
+                    y: alumni,
+                    type: 'bar',
+                    name: 'Alumni',
+                    marker: { color: '#6f42c1' }
+                },
+                {
+                    x: events,
+                    y: students,
+                    type: 'bar',
+                    name: 'Students',
+                    marker: { color: '#28a745' }
+                },
+                {
+                    x: events,
+                    y: friendsFamily,
+                    type: 'bar',
+                    name: 'Friends/Family',
+                    marker: { color: '#fd7e14' }
+                },
+                {
+                    x: events,
+                    y: staffFaculty,
+                    type: 'bar',
+                    name: 'Staff/Faculty',
+                    marker: { color: '#20c997' }
+                }
+            ];
+
+            const stackedLayout = createStandardChartLayout('Attendee Types by Event (Stacked)', 'Events', 'Number of Attendees');
+            stackedLayout.barmode = 'stack';
+            Plotly.newPlot('attendeeTypesChart', stackedData, stackedLayout, createChartConfig());
+        }
+
+        function createFirstTimeCharts(container) {
+            const data = currentAnalysis.data || [];
+            
+            // Debug: Log the data to see what we're working with
+            console.log('First-time data check:', data);
+            console.log('Data columns:', data.length > 0 ? Object.keys(data[0]) : 'No data');
+            
+            const hasFirstTimeData = data.some(row => 
+                (row['1st Time Alumni'] && row['1st Time Alumni'] > 0) ||
+                (row['1st Time Parents'] && row['1st Time Parents'] > 0) ||
+                (row['1st Time Friends'] && row['1st Time Friends'] > 0)
+            );
+
+            console.log('Has first-time data:', hasFirstTimeData);
+
+            if (!hasFirstTimeData) {
+                container.innerHTML = `
+                    <div class="alert alert-info text-center">
+                        <h5><i class="fas fa-info-circle"></i> No First-Time Attendee Data Available</h5>
+                        <p>Add events with first-time attendee data to see new attendee insights.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="firstTimeBreakdownChart"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="firstTimeTrendChart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="firstTimePieChart"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <div id="firstTimeComparisonChart"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Create First-Time Attendee Breakdown Chart
+            const events = data.map(row => row['Event Name'] || 'Unnamed Event');
+            const firstTimeAlumni = data.map(row => row['1st Time Alumni'] || 0);
+            const firstTimeParents = data.map(row => row['1st Time Parents'] || 0);
+            const firstTimeFriends = data.map(row => row['1st Time Friends'] || 0);
+
+            // Debug: Log the extracted values
+            console.log('Events:', events);
+            console.log('First-time Alumni:', firstTimeAlumni);
+            console.log('First-time Parents:', firstTimeParents);
+            console.log('First-time Friends:', firstTimeFriends);
+
+            const breakdownData = [
+                {
+                    x: events,
+                    y: firstTimeAlumni,
+                    type: 'bar',
+                    name: '1st Time Alumni',
+                    marker: { color: '#007bff' },
+                    hovertemplate: '<b>%{x}</b><br>🎓 1st Time Alumni: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: firstTimeParents,
+                    type: 'bar',
+                    name: '1st Time Parents',
+                    marker: { color: '#28a745' },
+                    hovertemplate: '<b>%{x}</b><br>👨‍👩‍👧‍👦 1st Time Parents: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: firstTimeFriends,
+                    type: 'bar',
+                    name: '1st Time Friends',
+                    marker: { color: '#fd7e14' },
+                    hovertemplate: '<b>%{x}</b><br>👥 1st Time Friends: %{y}<extra></extra>'
+                }
+            ];
+
+            const breakdownLayout = createStandardChartLayout('First-Time Attendees by Event', 'Events', 'Number of First-Time Attendees');
+            Plotly.newPlot('firstTimeBreakdownChart', breakdownData, breakdownLayout, createChartConfig());
+
+            // Create First-Time Attendee Trend Chart
+            const totalFirstTime = firstTimeAlumni.map((alumni, i) => alumni + firstTimeParents[i] + firstTimeFriends[i]);
+            const trendData = [{
+                x: events,
+                y: totalFirstTime,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Total First-Time Attendees',
+                line: { color: '#c41e3a', width: 3 },
+                marker: { size: 8 },
+                hovertemplate: '<b>%{x}</b><br>⭐ Total First-Time: %{y}<extra></extra>'
+            }];
+
+            const trendLayout = createStandardChartLayout('First-Time Attendee Trend', 'Events', 'Total First-Time Attendees');
+            Plotly.newPlot('firstTimeTrendChart', trendData, trendLayout, createChartConfig());
+
+            // Create First-Time Attendee Pie Chart
+            const totalAlumni = firstTimeAlumni.reduce((sum, val) => sum + val, 0);
+            const totalParents = firstTimeParents.reduce((sum, val) => sum + val, 0);
+            const totalFriends = firstTimeFriends.reduce((sum, val) => sum + val, 0);
+
+            const pieData = [{
+                labels: ['1st Time Alumni', '1st Time Parents', '1st Time Friends'],
+                values: [totalAlumni, totalParents, totalFriends],
+                type: 'pie',
+                marker: {
+                    colors: ['#007bff', '#28a745', '#fd7e14']
+                },
+                hovertemplate: '<b>%{label}</b><br>%{value} attendees<br>%{percent}<extra></extra>'
+            }];
+
+            const pieLayout = createStandardChartLayout('First-Time Attendee Distribution', '', '');
+            Plotly.newPlot('firstTimePieChart', pieData, pieLayout, createChartConfig());
+
+            // Create First-Time vs Returning Comparison
+            const returningAlumni = data.map(row => (row['Young Alumni Registered'] || 0) + (row['Alumni Registered'] || 0) - (row['1st Time Alumni'] || 0));
+            const comparisonData = [
+                {
+                    x: events,
+                    y: totalFirstTime,
+                    type: 'bar',
+                    name: 'First-Time Attendees',
+                    marker: { color: '#c41e3a' },
+                    hovertemplate: '<b>%{x}</b><br>⭐ First-Time: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: returningAlumni,
+                    type: 'bar',
+                    name: 'Returning Attendees',
+                    marker: { color: '#28a745' },
+                    hovertemplate: '<b>%{x}</b><br>🔄 Returning: %{y}<extra></extra>'
+                }
+            ];
+
+            const comparisonLayout = createStandardChartLayout('First-Time vs Returning Attendees', 'Events', 'Number of Attendees');
+            Plotly.newPlot('firstTimeComparisonChart', comparisonData, comparisonLayout, createChartConfig());
+        }
+
+        function createFeedbackCharts(container) {
+            const data = currentAnalysis.data || [];
+            
+            // Debug: Log the data to see what we're working with
+            console.log('Feedback data check:', data);
+            console.log('Data columns:', data.length > 0 ? Object.keys(data[0]) : 'No data');
+            
+            const hasFeedbackData = data.some(row => 
+                (row['Total Ratings'] && row['Total Ratings'] > 0) ||
+                (row['5-Star Ratings'] && row['5-Star Ratings'] > 0) ||
+                (row['4-Star Ratings'] && row['4-Star Ratings'] > 0) ||
+                (row['3-Star Ratings'] && row['3-Star Ratings'] > 0) ||
+                (row['2-Star Ratings'] && row['2-Star Ratings'] > 0) ||
+                (row['1-Star Ratings'] && row['1-Star Ratings'] > 0)
+            );
+
+            console.log('Has feedback data:', hasFeedbackData);
+
+            if (!hasFeedbackData) {
+                container.innerHTML = `
+                    <div class="alert alert-info text-center">
+                        <h5><i class="fas fa-info-circle"></i> No Feedback Data Available</h5>
+                        <p>Add events with feedback ratings to see satisfaction analytics.</p>
+                        <small class="text-muted">Available columns: ${data.length > 0 ? Object.keys(data[0]).join(', ') : 'None'}</small>
+                    </div>
+                `;
+                return;
+            }
+
+            // Prepare data for comprehensive analysis
+            const events = data.map(row => row['Event Name'] || 'Unnamed Event');
+            const fiveStar = data.map(row => row['5-Star Ratings'] || 0);
+            const fourStar = data.map(row => row['4-Star Ratings'] || 0);
+            const threeStar = data.map(row => row['3-Star Ratings'] || 0);
+            const twoStar = data.map(row => row['2-Star Ratings'] || 0);
+            const oneStar = data.map(row => row['1-Star Ratings'] || 0);
+            const totalRatings = data.map(row => row['Total Ratings'] || 0);
+
+            // Calculate comprehensive metrics
+            const averageRatings = data.map(row => {
+                const total = (row['5-Star Ratings'] || 0) + (row['4-Star Ratings'] || 0) + 
+                             (row['3-Star Ratings'] || 0) + (row['2-Star Ratings'] || 0) + 
+                             (row['1-Star Ratings'] || 0);
+                if (total === 0) return 0;
+                const weightedSum = (row['5-Star Ratings'] || 0) * 5 + (row['4-Star Ratings'] || 0) * 4 + 
+                                  (row['3-Star Ratings'] || 0) * 3 + (row['2-Star Ratings'] || 0) * 2 + 
+                                  (row['1-Star Ratings'] || 0) * 1;
+                return weightedSum / total;
+            });
+
+            const satisfactionScores = data.map(row => {
+                const total = (row['5-Star Ratings'] || 0) + (row['4-Star Ratings'] || 0) + 
+                             (row['3-Star Ratings'] || 0) + (row['2-Star Ratings'] || 0) + 
+                             (row['1-Star Ratings'] || 0);
+                if (total === 0) return 0;
+                const positiveRatings = (row['5-Star Ratings'] || 0) + (row['4-Star Ratings'] || 0);
+                return (positiveRatings / total) * 100;
+            });
+
+            // Create comprehensive feedback dashboard
+            container.innerHTML = `
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="alert alert-success">
+                            <h5><i class="fas fa-star"></i> Event Feedback Analysis Dashboard</h5>
+                            <p class="mb-0">Comprehensive analysis of event satisfaction ratings to identify top performers and improvement opportunities.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center h-100" style="border-left: 4px solid #28a745;">
+                            <div class="card-body">
+                                <i class="fas fa-trophy fa-2x text-success mb-2"></i>
+                                <h6 class="card-title">Best Rated Event</h6>
+                                <h5 class="text-success">${getBestRatedEvent(events, averageRatings) || 'N/A'}</h5>
+                                <small class="text-muted">${Math.max(...averageRatings).toFixed(2)}/5.0</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center h-100" style="border-left: 4px solid #ffc107;">
+                            <div class="card-body">
+                                <i class="fas fa-chart-line fa-2x text-warning mb-2"></i>
+                                <h6 class="card-title">Most Feedback</h6>
+                                <h5 class="text-warning">${getMostFeedbackEvent(events, totalRatings) || 'N/A'}</h5>
+                                <small class="text-muted">${Math.max(...totalRatings)} ratings</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center h-100" style="border-left: 4px solid #17a2b8;">
+                            <div class="card-body">
+                                <i class="fas fa-percentage fa-2x text-info mb-2"></i>
+                                <h6 class="card-title">Avg Satisfaction</h6>
+                                <h5 class="text-info">${(satisfactionScores.reduce((a, b) => a + b, 0) / satisfactionScores.length).toFixed(1)}%</h5>
+                                <small class="text-muted">Positive ratings</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center h-100" style="border-left: 4px solid #6f42c1;">
+                            <div class="card-body">
+                                <i class="fas fa-star fa-2x text-purple mb-2"></i>
+                                <h6 class="card-title">Overall Rating</h6>
+                                <h5 class="text-purple">${(averageRatings.reduce((a, b) => a + b, 0) / averageRatings.length).toFixed(2)}/5.0</h5>
+                                <small class="text-muted">Average across events</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 1: Event Performance Comparison -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="chart-container">
+                            <div id="eventPerformanceChart" style="height: 500px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Rating Distribution Analysis -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="chart-container">
+                            <div id="ratingDistributionChart" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="chart-container">
+                            <div id="satisfactionPieChart" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Feedback Volume & Quality -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="chart-container">
+                            <div id="feedbackVolumeChart" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Create comprehensive feedback charts
+            // Note: events, fiveStar, fourStar, etc. are already defined above
+
+            try {
+                console.log('Starting chart creation...');
+                console.log('Events:', events);
+                console.log('Five star data:', fiveStar);
+                console.log('Average ratings:', averageRatings);
+
+                // Chart 1: Event Performance Comparison (Combined metrics)
+                const performanceData = [
+                {
+                    x: events,
+                    y: averageRatings,
+                    type: 'bar',
+                    name: 'Average Rating',
+                    yaxis: 'y',
+                    marker: { 
+                        color: averageRatings.map(rating => {
+                            if (rating >= 4.5) return '#28a745';
+                            if (rating >= 4.0) return '#20c997';
+                            if (rating >= 3.5) return '#ffc107';
+                            if (rating >= 3.0) return '#fd7e14';
+                            return '#dc3545';
+                        }),
+                        line: { color: '#ffffff', width: 1 }
+                    },
+                    hovertemplate: '<b>%{x}</b><br>⭐ Average Rating: %{y:.2f}/5.0<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: satisfactionScores,
+                    type: 'scatter',
+                    mode: 'markers+lines',
+                    name: 'Satisfaction %',
+                    yaxis: 'y2',
+                    marker: { size: 10, color: '#6f42c1' },
+                    line: { color: '#6f42c1', width: 3 },
+                    hovertemplate: '<b>%{x}</b><br>📊 Satisfaction: %{y:.1f}%<extra></extra>'
+                }
+            ];
+
+            const performanceLayout = createStandardChartLayout('Event Performance Comparison', 'Events', 'Average Rating (1-5)');
+            performanceLayout.yaxis = { title: 'Average Rating (1-5)', range: [0, 5] };
+            performanceLayout.yaxis2 = { title: 'Satisfaction %', overlaying: 'y', side: 'right', range: [0, 100] };
+            performanceLayout.legend = { x: 0.02, y: 0.98 };
+            Plotly.newPlot('eventPerformanceChart', performanceData, performanceLayout, createChartConfig());
+
+            // Chart 2: Rating Distribution Analysis
+            const ratingDistributionData = [
+                {
+                    x: events,
+                    y: fiveStar,
+                    type: 'bar',
+                    name: '5 Stars',
+                    marker: { color: '#28a745' },
+                    hovertemplate: '<b>%{x}</b><br>⭐ 5 Stars: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: fourStar,
+                    type: 'bar',
+                    name: '4 Stars',
+                    marker: { color: '#20c997' },
+                    hovertemplate: '<b>%{x}</b><br>⭐ 4 Stars: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: threeStar,
+                    type: 'bar',
+                    name: '3 Stars',
+                    marker: { color: '#ffc107' },
+                    hovertemplate: '<b>%{x}</b><br>⭐ 3 Stars: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: twoStar,
+                    type: 'bar',
+                    name: '2 Stars',
+                    marker: { color: '#fd7e14' },
+                    hovertemplate: '<b>%{x}</b><br>⭐ 2 Stars: %{y}<extra></extra>'
+                },
+                {
+                    x: events,
+                    y: oneStar,
+                    type: 'bar',
+                    name: '1 Star',
+                    marker: { color: '#dc3545' },
+                    hovertemplate: '<b>%{x}</b><br>⭐ 1 Star: %{y}<extra></extra>'
+                }
+            ];
+
+            const ratingDistributionLayout = createStandardChartLayout('Rating Distribution by Event', 'Events', 'Number of Ratings');
+            Plotly.newPlot('ratingDistributionChart', ratingDistributionData, ratingDistributionLayout, createChartConfig());
+
+            // Overall Rating Distribution Pie Chart
+            const totalFiveStar = fiveStar.reduce((sum, val) => sum + val, 0);
+            const totalFourStar = fourStar.reduce((sum, val) => sum + val, 0);
+            const totalThreeStar = threeStar.reduce((sum, val) => sum + val, 0);
+            const totalTwoStar = twoStar.reduce((sum, val) => sum + val, 0);
+            const totalOneStar = oneStar.reduce((sum, val) => sum + val, 0);
+
+            const satisfactionData = [{
+                values: [totalFiveStar, totalFourStar, totalThreeStar, totalTwoStar, totalOneStar],
+                labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
+                type: 'pie',
+                marker: {
+                    colors: ['#28a745', '#20c997', '#ffc107', '#fd7e14', '#dc3545']
+                },
+                hovertemplate: '<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>'
+            }];
+
+            const satisfactionLayout = createStandardChartLayout('Overall Rating Distribution', '', '');
+            Plotly.newPlot('satisfactionPieChart', satisfactionData, satisfactionLayout, createChartConfig());
+
+            // Chart 3: Feedback Volume & Quality
+            const feedbackVolumeData = [{
+                x: events,
+                y: totalRatings,
+                type: 'bar',
+                name: 'Total Ratings',
+                marker: { 
+                    color: totalRatings.map(count => {
+                        const max = Math.max(...totalRatings);
+                        const intensity = count / max;
+                        return `rgba(111, 66, 193, ${0.3 + intensity * 0.7})`;
+                    }),
+                    line: { color: '#6f42c1', width: 2 }
+                },
+                hovertemplate: '<b>%{x}</b><br>📈 Total Ratings: %{y}<extra></extra>'
+            }];
+
+            const feedbackVolumeLayout = createStandardChartLayout('Feedback Volume by Event', 'Events', 'Number of Ratings');
+            Plotly.newPlot('feedbackVolumeChart', feedbackVolumeData, feedbackVolumeLayout, createChartConfig());
+
+
+
+                console.log('All charts created successfully!');
+            } catch (error) {
+                console.error('Error creating feedback charts:', error);
+                container.innerHTML += `
+                    <div class="alert alert-danger">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Chart Creation Error</h5>
+                        <p>Error: ${error.message}</p>
+                        <small>Check console for more details</small>
+                    </div>
+                `;
+            }
+        }
+
         function downloadEventData() {
             if (!currentAnalysis || !currentAnalysis.data) {
                 alert('No data available to download');
                 return;
             }
 
-            // Create CSV content with the same column order
-            const columnOrder = [
-                'Event Name',
+            // Get all available columns from the data
+            const allColumns = Object.keys(currentAnalysis.data[0] || {});
+            
+            // Define preferred column order (same as display table)
+            const preferredOrder = [
                 'Date', 
-                'All Incurred Expenses',
+                'Event Name',
+                'Location',
+                'Description',
                 'Event Income',
+                'All Incurred Expenses',
                 'Underwritten',
-                'Profit/Loss'
+                'Profit/Loss',
+                'Young Alumni Start Year',
+                'Young Alumni End Year',
+                'Alumni Cutoff Year',
+                'Young Alumni Registered',
+                'Alumni Registered',
+                'Total Alumni Attended',
+                'Students Attended',
+                'Friends/Family Attended',
+                'Staff/Faculty Attended',
+                'Total Alumni/Guests',
+                '% Young Alumni Attendees',
+                '% Non-Young Alumni Attendees',
+                '1st Time Alumni',
+                '1st Time Parents',
+                '1st Time Friends',
+                '5-Star Ratings',
+                '4-Star Ratings',
+                '3-Star Ratings',
+                '2-Star Ratings',
+                '1-Star Ratings',
+                'Total Ratings'
             ];
+
+            // Create final column order (preferred order + any remaining columns)
+            const columnOrder = preferredOrder.filter(col => allColumns.includes(col))
+                .concat(allColumns.filter(col => !preferredOrder.includes(col)));
 
             const csvContent = [
                 columnOrder.join(','), // Header row
@@ -1066,8 +2240,8 @@
                         // Format numbers and handle special characters
                         if (typeof value === 'number') {
                             return value.toFixed(2);
-                        } else if (typeof value === 'string' && value.includes(',')) {
-                            return `"${value}"`; // Quote strings with commas
+                        } else if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+                            return `"${value.replace(/"/g, '""')}"`; // Quote strings with commas, quotes, or newlines
                         } else {
                             return value || '';
                         }
@@ -1075,12 +2249,17 @@
                 )
             ].join('\n');
 
+            // Get the file name from the page title or use default
+            const fileName = document.getElementById('fileTitle').textContent || 'OWU_Event_Data';
+            const cleanFileName = fileName.replace(/[^a-zA-Z0-9\s-_]/g, '').trim();
+            const timestamp = new Date().toISOString().split('T')[0];
+
             // Create and download the file
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', `OWU_Event_Data_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute('download', `${cleanFileName}_${timestamp}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -1095,19 +2274,11 @@
             document.getElementById('errorMessage').textContent = message;
         }
 
-        // Advanced Chart Creation Functions
-
-        function createTrendAnalysisCharts() {
-            const data = currentAnalysis.data || [];
-            if (!data || data.length === 0) return;
-
-            // Sort data by date for trend analysis
-            const sortedData = [...data].sort((a, b) => new Date(a.Date) - new Date(b.Date));
-            
-            const dates = sortedData.map(row => row.Date);
-            const income = sortedData.map(row => row['Event Income'] || 0);
-            const expenses = sortedData.map(row => row['All Incurred Expenses'] || 0);
-            const profitLoss = sortedData.map(row => row['Profit/Loss'] || 0);
+        function downloadEventData() {
+            if (!currentAnalysis || !currentAnalysis.data) {
+                alert('No data available to download');
+                return;
+            }
 
             // Trend Chart
             const trendData = [
@@ -1595,6 +2766,22 @@
             return { l: 80, r: 50, t: 60, b: 60 };
         }
 
+        function createChartConfig() {
+            return {
+                displayModeBar: true,
+                displaylogo: false,
+                modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
+                responsive: true,
+                toImageButtonOptions: {
+                    format: 'png',
+                    filename: 'owu_chart',
+                    height: 500,
+                    width: 800,
+                    scale: 1
+                }
+            };
+        }
+
         function createStandardChartLayout(title, position = 'bottom', additionalConfig = {}) {
             return {
                 title: createChartTitleConfig(title, position),
@@ -1607,6 +2794,20 @@
                 ...additionalConfig
             };
         }
+
+        // Helper functions for feedback analysis
+        function getBestRatedEvent(events, ratings) {
+            const maxRating = Math.max(...ratings);
+            const bestIndex = ratings.indexOf(maxRating);
+            return events[bestIndex] || 'N/A';
+        }
+
+        function getMostFeedbackEvent(events, totals) {
+            const maxTotal = Math.max(...totals);
+            const mostIndex = totals.indexOf(maxTotal);
+            return events[mostIndex] || 'N/A';
+        }
     </script>
 </body>
 </html>
+

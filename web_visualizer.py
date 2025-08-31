@@ -297,17 +297,44 @@ def add_event(file_id):
         with open(file_path, 'r') as f:
             file_data = json.load(f)
         
-        # Create new event
+        # Extract basic information (always required)
+        basic_data = data.get('basic', {})
+        
+        # Create new event with basic information
         new_event = {
             'id': f"event_{len(file_data['events']) + 1}",
-            'date': data.get('date', ''),
-            'name': data.get('name', ''),
-            'income': float(data.get('income', 0)),
-            'expenses': float(data.get('expenses', 0)),
-            'underwritten': float(data.get('underwritten', 0)),
-            'profit_loss': float(data.get('income', 0)) - float(data.get('expenses', 0)) + float(data.get('underwritten', 0)),
+            'date': basic_data.get('date', ''),
+            'name': basic_data.get('name', ''),
+            'location': basic_data.get('location', ''),
+            'description': basic_data.get('description', ''),
             'created_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
+        
+        # Add income/expense data if provided
+        if 'incomeExpense' in data:
+            income_expense = data['incomeExpense']
+            new_event['income'] = float(income_expense.get('income', 0))
+            new_event['expenses'] = float(income_expense.get('expenses', 0))
+            new_event['underwritten'] = float(income_expense.get('underwritten', 0))
+            new_event['profit_loss'] = float(income_expense.get('profitLoss', 0))
+        else:
+            # Default values for backward compatibility
+            new_event['income'] = 0.0
+            new_event['expenses'] = 0.0
+            new_event['underwritten'] = 0.0
+            new_event['profit_loss'] = 0.0
+        
+        # Add attendance data if provided
+        if 'attendance' in data:
+            new_event['attendance'] = data['attendance']
+        
+        # Add first time attendees data if provided
+        if 'firstTimeAttendees' in data:
+            new_event['first_time_attendees'] = data['firstTimeAttendees']
+        
+        # Add feedback data if provided
+        if 'feedback' in data:
+            new_event['feedback'] = data['feedback']
         
         file_data['events'].append(new_event)
         file_data['last_modified'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -336,12 +363,33 @@ def update_event(file_id, event_id):
         # Find and update event
         for event in file_data['events']:
             if event['id'] == event_id:
-                event['date'] = data.get('date', event['date'])
-                event['name'] = data.get('name', event['name'])
-                event['income'] = float(data.get('income', event['income']))
-                event['expenses'] = float(data.get('expenses', event['expenses']))
-                event['underwritten'] = float(data.get('underwritten', event['underwritten']))
-                event['profit_loss'] = event['income'] - event['expenses'] + event['underwritten']
+                # Update basic information
+                basic_data = data.get('basic', {})
+                event['date'] = basic_data.get('date', event.get('date', ''))
+                event['name'] = basic_data.get('name', event.get('name', ''))
+                event['location'] = basic_data.get('location', event.get('location', ''))
+                event['description'] = basic_data.get('description', event.get('description', ''))
+                
+                # Update income/expense data if provided
+                if 'incomeExpense' in data:
+                    income_expense = data['incomeExpense']
+                    event['income'] = float(income_expense.get('income', event.get('income', 0)))
+                    event['expenses'] = float(income_expense.get('expenses', event.get('expenses', 0)))
+                    event['underwritten'] = float(income_expense.get('underwritten', event.get('underwritten', 0)))
+                    event['profit_loss'] = float(income_expense.get('profitLoss', event.get('profit_loss', 0)))
+                
+                # Update attendance data if provided
+                if 'attendance' in data:
+                    event['attendance'] = data['attendance']
+                
+                # Update first time attendees data if provided
+                if 'firstTimeAttendees' in data:
+                    event['first_time_attendees'] = data['firstTimeAttendees']
+                
+                # Update feedback data if provided
+                if 'feedback' in data:
+                    event['feedback'] = data['feedback']
+                
                 event['last_modified'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 break
         
@@ -395,7 +443,7 @@ def delete_file(file_id):
 
 @app.route('/api/files/<file_id>/export', methods=['GET'])
 def export_file(file_id):
-    """Export event file as Excel."""
+    """Export event file as Excel with comprehensive data."""
     try:
         file_path = os.path.join('event_data', f"{file_id}.json")
         
@@ -405,28 +453,73 @@ def export_file(file_id):
         with open(file_path, 'r') as f:
             file_data = json.load(f)
         
-        # Create DataFrame for export
+        # Create comprehensive DataFrame for export
         events_data = []
         for event in file_data['events']:
-            events_data.append({
-                'Date': event['date'],
-                'Event Name': event['name'],
-                'Event Income': event['income'],
-                'All Incurred Expenses': event['expenses'],
-                'Underwritten': event['underwritten'],
-                'Profit/Loss': event['profit_loss']
-            })
+            # Start with basic information
+            event_row = {
+                'Date': event.get('date', ''),
+                'Event Name': event.get('name', ''),
+                'Location': event.get('location', ''),
+                'Description': event.get('description', ''),
+                'Event Income': event.get('income', 0),
+                'All Incurred Expenses': event.get('expenses', 0),
+                'Underwritten': event.get('underwritten', 0),
+                'Profit/Loss': event.get('profit_loss', 0)
+            }
+            
+            # Add attendance data if available
+            if 'attendance' in event:
+                attendance = event['attendance']
+                if 'yearRanges' in attendance:
+                    event_row['Young Alumni Start Year'] = attendance['yearRanges'].get('yaStartYear', '')
+                    event_row['Young Alumni End Year'] = attendance['yearRanges'].get('yaEndYear', '')
+                    event_row['Alumni Cutoff Year'] = attendance['yearRanges'].get('alumniCutoffYear', '')
+                
+                if 'alumni' in attendance:
+                    event_row['Young Alumni Registered'] = attendance['alumni'].get('yaRegistered', 0)
+                    event_row['Alumni Registered'] = attendance['alumni'].get('alumniRegistered', 0)
+                    event_row['Total Alumni Attended'] = attendance['alumni'].get('totalAlumniAttended', 0)
+                
+                if 'other' in attendance:
+                    event_row['Students Attended'] = attendance['other'].get('students', 0)
+                    event_row['Friends/Family Attended'] = attendance['other'].get('friendsFamily', 0)
+                    event_row['Staff/Faculty Attended'] = attendance['other'].get('staffFaculty', 0)
+                
+                if 'totals' in attendance:
+                    event_row['Total Alumni/Guests'] = attendance['totals'].get('totalAlumniGuests', 0)
+                    event_row['% Young Alumni Attendees'] = attendance['totals'].get('percentYAAttendees', 0)
+                    event_row['% Non-Young Alumni Attendees'] = attendance['totals'].get('percentNonYAAttendees', 0)
+            
+            # Add first time attendees data if available
+            if 'first_time_attendees' in event:
+                first_time = event['first_time_attendees']
+                event_row['1st Time Alumni'] = first_time.get('alumni', 0)
+                event_row['1st Time Parents'] = first_time.get('parents', 0)
+                event_row['1st Time Friends'] = first_time.get('friends', 0)
+            
+            # Add feedback data if available
+            if 'feedback' in event:
+                feedback = event['feedback']
+                event_row['5-Star Ratings'] = feedback.get('rating5', 0)
+                event_row['4-Star Ratings'] = feedback.get('rating4', 0)
+                event_row['3-Star Ratings'] = feedback.get('rating3', 0)
+                event_row['2-Star Ratings'] = feedback.get('rating2', 0)
+                event_row['1-Star Ratings'] = feedback.get('rating1', 0)
+                event_row['Total Ratings'] = feedback.get('total', 0)
+            
+            events_data.append(event_row)
         
         df = pd.DataFrame(events_data)
         
-        # Create Excel file
+        # Create Excel file with proper naming
         excel_path = os.path.join('event_data', f"{file_id}_export.xlsx")
         with pd.ExcelWriter(excel_path, engine='openpyxl') as writer:
-            df.to_excel(writer, sheet_name='Event Financial Data', index=False)
+            df.to_excel(writer, sheet_name='Event Data', index=False)
             
             # Get the workbook and worksheet
             workbook = writer.book
-            worksheet = writer.sheets['Event Financial Data']
+            worksheet = writer.sheets['Event Data']
             
             # Format headers
             for col in range(1, len(df.columns) + 1):
@@ -435,7 +528,12 @@ def export_file(file_id):
                 cell.fill = openpyxl.styles.PatternFill(start_color='D00000', end_color='D00000', fill_type='solid')
                 cell.font = cell.font.copy(color='FFFFFF')
         
-        return send_file(excel_path, as_attachment=True, download_name=f"{file_data['name']}.xlsx")
+        # Use the file name from the data for the download
+        file_name = file_data.get('name', 'OWU_Event_Data')
+        # Clean the filename for download
+        clean_filename = "".join(c for c in file_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        
+        return send_file(excel_path, as_attachment=True, download_name=f"{clean_filename}.xlsx")
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -451,17 +549,62 @@ def visualize_file(file_id):
         with open(file_path, 'r') as f:
             file_data = json.load(f)
         
-        # Convert to DataFrame for analysis
+        # Convert to comprehensive DataFrame for analysis
         events_data = []
         for event in file_data['events']:
-            events_data.append({
-                'Date': event['date'],
-                'Event Name': event['name'],
-                'Event Income': event['income'],
-                'All Incurred Expenses': event['expenses'],
-                'Underwritten': event['underwritten'],
-                'Profit/Loss': event['profit_loss']
-            })
+            # Start with basic information
+            event_row = {
+                'Date': event.get('date', ''),
+                'Event Name': event.get('name', ''),
+                'Location': event.get('location', ''),
+                'Description': event.get('description', ''),
+                'Event Income': event.get('income', 0),
+                'All Incurred Expenses': event.get('expenses', 0),
+                'Underwritten': event.get('underwritten', 0),
+                'Profit/Loss': event.get('profit_loss', 0)
+            }
+            
+            # Add attendance data if available
+            if 'attendance' in event:
+                attendance = event['attendance']
+                if 'yearRanges' in attendance:
+                    event_row['Young Alumni Start Year'] = attendance['yearRanges'].get('yaStartYear', '')
+                    event_row['Young Alumni End Year'] = attendance['yearRanges'].get('yaEndYear', '')
+                    event_row['Alumni Cutoff Year'] = attendance['yearRanges'].get('alumniCutoffYear', '')
+                
+                if 'alumni' in attendance:
+                    event_row['Young Alumni Registered'] = attendance['alumni'].get('yaRegistered', 0)
+                    event_row['Alumni Registered'] = attendance['alumni'].get('alumniRegistered', 0)
+                    event_row['Total Alumni Attended'] = attendance['alumni'].get('totalAlumniAttended', 0)
+                
+                if 'other' in attendance:
+                    event_row['Students Attended'] = attendance['other'].get('students', 0)
+                    event_row['Friends/Family Attended'] = attendance['other'].get('friendsFamily', 0)
+                    event_row['Staff/Faculty Attended'] = attendance['other'].get('staffFaculty', 0)
+                
+                if 'totals' in attendance:
+                    event_row['Total Alumni/Guests'] = attendance['totals'].get('totalAlumniGuests', 0)
+                    event_row['% Young Alumni Attendees'] = attendance['totals'].get('percentYAAttendees', 0)
+                    event_row['% Non-Young Alumni Attendees'] = attendance['totals'].get('percentNonYAAttendees', 0)
+            
+            # Add first time attendees data if available
+            if 'first_time_attendees' in event:
+                first_time = event['first_time_attendees']
+                event_row['1st Time Alumni'] = first_time.get('alumni', 0)
+                event_row['1st Time Parents'] = first_time.get('parents', 0)
+                event_row['1st Time Friends'] = first_time.get('friends', 0)
+            
+            # Add feedback data if available
+            if 'feedback' in event:
+                feedback = event['feedback']
+                event_row['5-Star Ratings'] = feedback.get('rating5', 0)
+                event_row['4-Star Ratings'] = feedback.get('rating4', 0)
+                event_row['3-Star Ratings'] = feedback.get('rating3', 0)
+                event_row['2-Star Ratings'] = feedback.get('rating2', 0)
+                event_row['1-Star Ratings'] = feedback.get('rating1', 0)
+                event_row['Total Ratings'] = feedback.get('total', 0)
+            
+            events_data.append(event_row)
         
         df = pd.DataFrame(events_data)
         

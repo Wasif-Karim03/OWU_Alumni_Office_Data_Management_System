@@ -2,6 +2,148 @@
   "id": "owu_events_1756581777",
   "name": "Fall 2024 Event Data",
   "created_date": "2025-08-30 15:22:57",
-  "last_modified": "2025-08-30 15:22:57",
-  "events": []
+  "last_modified": "2025-08-31 02:08:39",
+  "events": [
+    {
+      "id": "event_1",
+      "date": "2024-10-04",
+      "name": "Homecoming and Family Weekend",
+      "location": "Delaware,Ohio",
+      "description": "HCFW",
+      "created_date": "2025-08-31 02:05:08",
+      "income": 10073.0,
+      "expenses": 28633.0,
+      "underwritten": 0.0,
+      "profit_loss": -18560.0,
+      "attendance": {
+        "yearRanges": {
+          "yaStartYear": "2014",
+          "yaEndYear": "2024",
+          "alumniCutoffYear": "2013"
+        },
+        "alumni": {
+          "yaRegistered": 190,
+          "alumniRegistered": 291,
+          "totalAlumniAttended": 485
+        },
+        "other": {
+          "students": 200,
+          "friendsFamily": 206,
+          "staffFaculty": 12
+        },
+        "totals": {
+          "totalAlumniGuests": 899,
+          "percentYAAttendees": 39.5,
+          "percentNonYAAttendees": 60.5
+        }
+      },
+      "first_time_attendees": {
+        "alumni": 149,
+        "parents": 102,
+        "friends": 0
+      },
+      "feedback": {
+        "rating5": 10,
+        "rating4": 3,
+        "rating3": 3,
+        "rating2": 2,
+        "rating1": 0,
+        "total": 18
+      }
+    },
+    {
+      "id": "event_2",
+      "date": "2024-11-09",
+      "name": "Women of Wesleyan",
+      "location": "Delaware,Ohio",
+      "description": "WOW",
+      "created_date": "2025-08-31 02:06:47",
+      "income": 4085.0,
+      "expenses": 8500.0,
+      "underwritten": 999.93,
+      "profit_loss": -3415.07,
+      "attendance": {
+        "yearRanges": {
+          "yaStartYear": "2014",
+          "yaEndYear": "2024",
+          "alumniCutoffYear": "2013"
+        },
+        "alumni": {
+          "yaRegistered": 19,
+          "alumniRegistered": 62,
+          "totalAlumniAttended": 81
+        },
+        "other": {
+          "students": 30,
+          "friendsFamily": 10,
+          "staffFaculty": 5
+        },
+        "totals": {
+          "totalAlumniGuests": 126,
+          "percentYAAttendees": 23.5,
+          "percentNonYAAttendees": 76.5
+        }
+      },
+      "first_time_attendees": {
+        "alumni": 23,
+        "parents": 1,
+        "friends": 0
+      },
+      "feedback": {
+        "rating5": 10,
+        "rating4": 0,
+        "rating3": 1,
+        "rating2": 0,
+        "rating1": 0,
+        "total": 11
+      }
+    },
+    {
+      "id": "event_3",
+      "date": "2024-11-09",
+      "name": "Delta Zeta Dinner",
+      "location": "Delaware,Ohio",
+      "description": "DZD",
+      "created_date": "2025-08-31 02:08:39",
+      "income": 3425.0,
+      "expenses": 2444.1,
+      "underwritten": 0.0,
+      "profit_loss": 980.9000000000001,
+      "attendance": {
+        "yearRanges": {
+          "yaStartYear": "2014",
+          "yaEndYear": "2024",
+          "alumniCutoffYear": "2013"
+        },
+        "alumni": {
+          "yaRegistered": 47,
+          "alumniRegistered": 43,
+          "totalAlumniAttended": 90
+        },
+        "other": {
+          "students": 20,
+          "friendsFamily": 5,
+          "staffFaculty": 0
+        },
+        "totals": {
+          "totalAlumniGuests": 115,
+          "percentYAAttendees": 52.2,
+          "percentNonYAAttendees": 47.8
+        }
+      },
+      "first_time_attendees": {
+        "alumni": 0,
+        "parents": 0,
+        "friends": 0
+      },
+      "feedback": {
+        "rating5": 2,
+        "rating4": 0,
+        "rating3": 0,
+        "rating2": 0,
+        "rating1": 0,
+        "total": 2
+      }
+    }
+  ]
 }
